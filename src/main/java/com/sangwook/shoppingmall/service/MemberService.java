@@ -1,5 +1,6 @@
 package com.sangwook.shoppingmall.service;
 
+import com.sangwook.shoppingmall.domain.member.dto.MemberLogin;
 import com.sangwook.shoppingmall.domain.member.dto.MemberRegister;
 import com.sangwook.shoppingmall.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public void register(MemberRegister memberRegister) {
+
+    }
+
+    public void login(MemberLogin memberLogin) {
 
     }
 

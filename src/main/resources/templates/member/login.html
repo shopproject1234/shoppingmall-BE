@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>SHOPPING MALL</h1>
+    <form th:action="@{/member/register}" th:object="${memberLogin}" method="post">
+        <label>
+            아이디 : <input type="email" th:field="*{email}">
+        </label>
+        <br>
+        <label>
+            비밀번호 : <input type="text" th:field="*{password}">
+        </label>
+        <button>로그인</button>
+        <br>
+    </form>
+    <form th:action="@{/member/getRegister}" method="get">
+        <button>회원가입</button>
+    </form>
+
+
+
+</body>
+</html>

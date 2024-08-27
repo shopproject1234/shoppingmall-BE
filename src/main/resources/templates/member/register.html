@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/member/register}" th:object="${memberRegister}" method="post">
+    <label>
+        이메일 : <input type="email" th:field="*{email}">
+    </label><br>
+    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+    <label>
+        이름 : <input type="text" th:field="*{name}">
+    </label><br>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    <label>
+        비밀번호 : <input type="text" th:field="*{password}">
+    </label><br>
+    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+    <label>
+        나이 : <input type="number" th:field="*{age}">
+    </label><br>
+    <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
+    <label>
+        성별 :
+        <select th:field="*{gender}">
+            <option th:each="gender : ${genders}" th:value="${gender}" th:text="${gender.displayName}"></option>
+        </select>
+        <h3>
+            카테고리 설정(!중요! 추천에 반영)
+        </h3>
+    </label>
+        관심있는 카테고리를 설정해주세요<br><br>
+    <label>
+        <input type="checkbox" th:field="*{furniture}" name="가구">가구<br>
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{fabric}" name="직물">직물<br>
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{appliance}" name="가전">가전<br>
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{kitchenware}" name="주방용품">주방용품<br>
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{deco}" name="데코">데코<br>
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{lighting}" name="조명">조명<br>
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{storage}" name="수납">수납<br>
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{dailyItem}" name="일상용품">일상용품<br>
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{kids}" name="어린이용품">어린이용품<br>
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{camping}" name="캠핑">캠핑<br>
+    </label>
+    <br>
+    <button>회원가입</button>
+</form>
+
+</body>
+</html>

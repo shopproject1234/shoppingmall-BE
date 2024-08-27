@@ -1,25 +1,28 @@
 package com.sangwook.shoppingmall.domain.member.dto;
 
 import com.sangwook.shoppingmall.constant.Gender;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 @Getter
+@Setter
 public class MemberRegister {
     
-    @NotNull
+    @NotEmpty(message = "이메일을 적어주세요")
     private String email;
 
-    @NotNull
+    @NotEmpty(message = "이름을 적어주세요")
     private String name;
 
-    @NotNull
+    @NotEmpty(message = "비밀번호를 입력해주세요, 5~15")
+    @Size(min = 5, max = 15, message = "5~15자리로 작성해야합니다")
     private String password;
 
-    @NotNull
+    @NotNull(message = "나이는 필수항목입니다")
     private Integer age;
 
-    @NotNull
     private Gender gender;
 
     private Boolean furniture;

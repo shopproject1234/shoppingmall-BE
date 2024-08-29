@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +27,7 @@ public class LoginController {
         return "member/login";
     }
 
-    @PostMapping("/member/getLogin")
+    @PostMapping("/member/login")
     public void login(@ModelAttribute("memberLogin") MemberLogin memberLogin) {
         memberService.login(memberLogin);
     }
@@ -47,7 +45,8 @@ public class LoginController {
             model.addAttribute("genders", Gender.values());
             return "member/register";
         }
+        memberService.register(memberRegister);
 
-        return "a";
+        return "redirect:/";
     }
 }

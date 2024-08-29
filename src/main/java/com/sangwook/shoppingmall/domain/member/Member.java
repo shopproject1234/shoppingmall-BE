@@ -2,6 +2,7 @@ package com.sangwook.shoppingmall.domain.member;
 
 import com.sangwook.shoppingmall.constant.Gender;
 import com.sangwook.shoppingmall.constant.Preference;
+import com.sangwook.shoppingmall.domain.member.dto.MemberRegister;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -59,4 +60,46 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Preference camping;
 
+    public static Member memberRegister(MemberRegister memberRegister) {
+        Member member = new Member();
+        member.email = memberRegister.getEmail();
+        member.name = memberRegister.getName();
+        member.password = memberRegister.getPassword();
+        member.age = memberRegister.getAge();
+        member.gender = memberRegister.getGender();
+        if (memberRegister.getFurniture()) {
+            member.furniture = Preference.INTERESTED;
+        }
+        if (memberRegister.getAppliance()) {
+            member.appliance = Preference.INTERESTED;
+        }
+        if (memberRegister.getKitchenware()) {
+            member.kitchenware = Preference.INTERESTED;
+        }
+        if (memberRegister.getDeco()) {
+            member.deco = Preference.INTERESTED;
+        }
+        if (memberRegister.getLighting()) {
+            member.lighting = Preference.INTERESTED;
+        }
+        if (memberRegister.getStorage()) {
+            member.storage = Preference.INTERESTED;
+        }
+        if (memberRegister.getDailyItem()) {
+            member.dailyItem = Preference.INTERESTED;
+        }
+        if (memberRegister.getKids()) {
+            member.kids = Preference.INTERESTED;
+        }
+        if (memberRegister.getCamping()) {
+            member.camping = Preference.INTERESTED;
+        }
+        return member;
+    }
+
+
+
+    public Member() {
+
+    }
 }

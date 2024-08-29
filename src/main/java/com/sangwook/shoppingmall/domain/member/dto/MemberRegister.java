@@ -4,7 +4,6 @@ import com.sangwook.shoppingmall.constant.Gender;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 @Getter
 @Setter

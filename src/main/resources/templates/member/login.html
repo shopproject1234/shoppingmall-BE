@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>SHOPPING MALL</h1>
-    <form th:action="@{/member/register}" th:object="${memberLogin}" method="post">
+    <form th:action="@{/member/login}" th:object="${memberLogin}" method="post">
         <label>
             아이디 : <input type="email" th:field="*{email}">
         </label>

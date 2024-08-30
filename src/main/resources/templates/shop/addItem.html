@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/shop/add}" th:object="${addItem}" method="post">
+    상품이름 : <label><input type="text" th:field="*{name}"></label><br>
+    카테고리 : <label>
+    <select th:field="*{category}">
+    <option th:each="category : ${categories}" th:value="${category}" th:text="${category.displayName}"></option>
+</select></label>
+    <br>
+    가격 : <label><input type="number" th:field="*{price}"></label><br>
+    수량 :
+    <label><input type="number" th:field="*{itemCount}"/></label><br>
+    <button>추가하기</button>
+</form>
+
+</body>
+</html>

@@ -29,17 +29,8 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void login(MemberLogin memberLogin) {
-        Optional<Member> member = memberRepository.findByEmail(memberLogin.getEmail());
-        if (member.isEmpty()) {
-            log.info("로그인 실패 계정 없음");
-            throw new IllegalStateException(); //TODO change exception
-        }
-        Member getMember = member.get();
-        if (!(memberLogin.getPassword()).equals(getMember.getPassword())) {
-            log.info("로그인 실패 비밀번호 다름");
-            throw new IllegalStateException(); //TODO change exception
-        }
+    public Optional<Member> login(String email) {
+        return memberRepository.findByEmail(email);
     }
 
 }

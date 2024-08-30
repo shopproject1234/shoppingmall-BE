@@ -1,9 +1,13 @@
 package com.sangwook.shoppingmall.controller;
 
 import com.sangwook.shoppingmall.constant.Gender;
+import com.sangwook.shoppingmall.constant.SessionConst;
+import com.sangwook.shoppingmall.domain.member.Member;
 import com.sangwook.shoppingmall.domain.member.dto.MemberLogin;
 import com.sangwook.shoppingmall.domain.member.dto.MemberRegister;
 import com.sangwook.shoppingmall.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -28,8 +34,19 @@ public class LoginController {
     }
 
     @PostMapping("/member/login")
-    public void login(@ModelAttribute("memberLogin") MemberLogin memberLogin) {
-        memberService.login(memberLogin);
+    public String login(@ModelAttribute("memberLogin") MemberLogin memberLogin, HttpServletRequest request) {
+        Optional<Member> member = memberService.login(memberLogin.getEmail());
+        if (member.isEmpty()) {
+            throw new IllegalStateException();
+        }
+        if (!member.get().getPassword().equals(memberLogin.getPassword())) {
+            throw new IllegalStateException();
+        }
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_MEMBER, member);
+
+        return "redirect:/shop/main";
     }
 
     @GetMapping("/member/getRegister")
@@ -47,6 +64,7 @@ public class LoginController {
         }
         memberService.register(memberRegister);
 
+        //TODO 회원가입 후 alert창 하나 띄우면 좋을듯?
         return "redirect:/";
     }
 }

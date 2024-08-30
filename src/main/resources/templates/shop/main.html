@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            width: 100%;
+            border: 1px solid #444444;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #444444;
+        }
+    </style>
+</head>
+<body>
+    <form th:action="@{/shop/add}">
+        <button>새로운 상품등록</button>
+    </form>
+    <h2>
+        추천 목록 (RECOMMENDED)
+    </h2>
+    <form th:object="${randomItem}">
+        <table>
+            <tr>
+                <td>카운트</td>
+                <td>카테고리</td>
+                <td>이름</td>
+                <td>가격</td>
+                <td>남은 수량</td>
+            </tr>
+            <tr th:each="item, stat : ${randomItem}">
+                <td th:text="${stat.count}"></td>
+                <td th:text="${item.category.displayName}"></td>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.price}"></td>
+                <td th:text="${item.itemCount}"></td>
+            </tr>
+        </table>
+    </form>
+    <h2>
+        상품 목록 (RANDOM)
+    </h2>
+    <form th:object="${randomItem}">
+        <table>
+            <tr>
+                <td>카운트</td>
+                <td>카테고리</td>
+                <td>이름</td>
+                <td>가격</td>
+                <td>남은 수량</td>
+            </tr>
+            <tr th:each="item, stat : ${randomItem}">
+                <td th:text="${stat.count}"></td>
+                <td th:text="${item.category.displayName}"></td>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.price}"></td>
+                <td th:text="${item.itemCount}"></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

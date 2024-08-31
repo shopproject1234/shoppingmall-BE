@@ -24,16 +24,16 @@ public class MemberRegister {
 
     private Gender gender;
 
-    private Boolean furniture;
-    private Boolean fabric;
-    private Boolean appliance;
-    private Boolean kitchenware;
-    private Boolean deco;
-    private Boolean lighting;
-    private Boolean storage;
-    private Boolean dailyItem;
-    private Boolean kids;
-    private Boolean camping;
+    private boolean furniture;
+    private boolean fabric;
+    private boolean appliance;
+    private boolean kitchenware;
+    private boolean deco;
+    private boolean lighting;
+    private boolean storage;
+    private boolean dailyItem;
+    private boolean kids;
+    private boolean camping;
 
     //어떻게하면 선호제품을 효과적으로 받을 수 있을까
 }

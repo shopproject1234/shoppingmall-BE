@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Optional;
-
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -35,13 +33,7 @@ public class LoginController {
 
     @PostMapping("/member/login")
     public String login(@ModelAttribute("memberLogin") MemberLogin memberLogin, HttpServletRequest request) {
-        Optional<Member> member = memberService.login(memberLogin.getEmail());
-        if (member.isEmpty()) {
-            throw new IllegalStateException();
-        }
-        if (!member.get().getPassword().equals(memberLogin.getPassword())) {
-            throw new IllegalStateException();
-        }
+        Member member = memberService.login(memberLogin);
 
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, member);
@@ -65,6 +57,13 @@ public class LoginController {
         memberService.register(memberRegister);
 
         //TODO 회원가입 후 alert창 하나 띄우면 좋을듯?
+        return "redirect:/";
+    }
+
+    @PostMapping("/member/logout")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.invalidate();
         return "redirect:/";
     }
 }

@@ -2,6 +2,7 @@ package com.sangwook.shoppingmall.service;
 
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
+import com.sangwook.shoppingmall.domain.member.Member;
 import com.sangwook.shoppingmall.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,8 +19,8 @@ public class ShopService {
 
     private final ItemRepository itemRepository;
 
-    public void add(AddItem addItem) {
-        Item item = Item.add(addItem);
+    public void add(AddItem addItem, Member member) {
+        Item item = Item.add(addItem, member);
         itemRepository.save(item);
     }
 

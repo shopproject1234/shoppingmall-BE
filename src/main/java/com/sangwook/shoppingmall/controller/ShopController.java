@@ -1,8 +1,10 @@
 package com.sangwook.shoppingmall.controller;
 
+import com.sangwook.shoppingmall.argumentResolver.Login;
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
+import com.sangwook.shoppingmall.domain.member.Member;
 import com.sangwook.shoppingmall.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +31,8 @@ public class ShopController {
     }
 
     @PostMapping("/shop/add")
-    public String addItem(@ModelAttribute("addItem") AddItem addItem) {
-        shopService.add(addItem);
+    public String addItem(@Login Member member, @ModelAttribute("addItem") AddItem addItem) {
+        shopService.add(addItem, member);
         return "redirect:/shop/main";
     }
 

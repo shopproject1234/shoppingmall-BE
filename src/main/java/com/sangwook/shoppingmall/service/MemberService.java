@@ -6,6 +6,7 @@ import com.sangwook.shoppingmall.domain.member.dto.MemberRegister;
 import com.sangwook.shoppingmall.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public void register(MemberRegister memberRegister) {
 
@@ -25,12 +27,18 @@ public class MemberService {
         if (getMember.isPresent()) {
             //TODO 이미 아이디가 있으면 view로 돌아가기
         }
-        Member member = Member.memberRegister(memberRegister);
+        String encoded = passwordEncoder.encode(memberRegister.getPassword());
+        Member member = Member.memberRegister(memberRegister, encoded);
         memberRepository.save(member);
     }
 
-    public Optional<Member> login(String email) {
-        return memberRepository.findByEmail(email);
+    public Member login(MemberLogin memberLogin) {
+        Optional<Member> member = memberRepository.findByEmail(memberLogin.getEmail());
+        if (member.isEmpty() || !passwordEncoder.matches(memberLogin.getPassword(), member.get().getPassword())) {
+            throw new IllegalStateException();
+        }
+        return member.get();
     }
+
 
 }

@@ -60,38 +60,38 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Preference camping;
 
-    public static Member memberRegister(MemberRegister memberRegister) {
+    public static Member memberRegister(MemberRegister memberRegister, String password) {
         Member member = new Member();
         member.email = memberRegister.getEmail();
         member.name = memberRegister.getName();
-        member.password = memberRegister.getPassword();
+        member.password = password;
         member.age = memberRegister.getAge();
         member.gender = memberRegister.getGender();
-        if (memberRegister.getFurniture()) {
+        if (memberRegister.isFurniture()) {
             member.furniture = Preference.INTERESTED;
         }
-        if (memberRegister.getAppliance()) {
+        if (memberRegister.isAppliance()) {
             member.appliance = Preference.INTERESTED;
         }
-        if (memberRegister.getKitchenware()) {
+        if (memberRegister.isKitchenware()) {
             member.kitchenware = Preference.INTERESTED;
         }
-        if (memberRegister.getDeco()) {
+        if (memberRegister.isDeco()) {
             member.deco = Preference.INTERESTED;
         }
-        if (memberRegister.getLighting()) {
+        if (memberRegister.isLighting()) {
             member.lighting = Preference.INTERESTED;
         }
-        if (memberRegister.getStorage()) {
+        if (memberRegister.isStorage()) {
             member.storage = Preference.INTERESTED;
         }
-        if (memberRegister.getDailyItem()) {
+        if (memberRegister.isDailyItem()) {
             member.dailyItem = Preference.INTERESTED;
         }
-        if (memberRegister.getKids()) {
+        if (memberRegister.isKids()) {
             member.kids = Preference.INTERESTED;
         }
-        if (memberRegister.getCamping()) {
+        if (memberRegister.isCamping()) {
             member.camping = Preference.INTERESTED;
         }
         return member;

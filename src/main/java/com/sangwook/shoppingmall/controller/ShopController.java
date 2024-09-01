@@ -6,6 +6,8 @@ import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
 import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.domain.member.Member;
+import com.sangwook.shoppingmall.domain.purchase.dto.PurchaseInfo;
+import com.sangwook.shoppingmall.domain.purchase.dto.PurchaseSubmit;
 import com.sangwook.shoppingmall.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,12 +52,27 @@ public class ShopController {
     public String itemInfo(@PathVariable Long itemId, @Login Member member, Model model) {
         Item item = shopService.findItemById(itemId);
         if (item.getMember().getId().equals(member.getId())) {
-            model.addAttribute("mine", true); //본인의 상품인지 확인
+            model.addAttribute("mine", true); //본인의 상품인지 확인 (수정, 삭제에 사용)
         } else {
             model.addAttribute("mine", false);
         }
         ItemInfo itemInfo = new ItemInfo(item, member);
         model.addAttribute("itemInfo", itemInfo);
         return "shop/itemInfo";
+    }
+
+    @GetMapping("/shop/purchase/{itemId}")
+    public String purchaseForm(@PathVariable Long itemId, @Login Member member, Model model) {
+        Item item = shopService.findItemById(itemId);
+        PurchaseInfo info = new PurchaseInfo(itemId, member.getName(), item.getItemCount(), item.getCategory(), item.getPrice(), item.getName());
+        model.addAttribute("purchaseInfo", info);
+        model.addAttribute("purchaseSubmit", new PurchaseSubmit());
+        return "shop/purchaseInfo";
+    }
+
+    @PostMapping("/shop/purchase/{itemId}")
+    public String purchaseItem(@PathVariable Long itemId, @Login Member member, @ModelAttribute(name = "purchaseSubmit") PurchaseSubmit purchaseSubmit) {
+        shopService.purchase(itemId, member, purchaseSubmit.getCount());
+        return "redirect:/shop/main";
     }
 }

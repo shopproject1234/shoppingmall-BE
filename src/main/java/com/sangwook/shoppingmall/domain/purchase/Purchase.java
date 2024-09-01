@@ -33,4 +33,15 @@ public class Purchase {
 
     private Integer totalPrice;
 
+    public Purchase(Member member, Item item, Category category, Integer count, Integer totalPrice) {
+        this.member = member;
+        this.item = item;
+        this.category = category;
+        this.count = count;
+        this.totalPrice = totalPrice;
+        this.date = LocalDateTime.now();
+    }
+
+    public Purchase() {
+    }
 }

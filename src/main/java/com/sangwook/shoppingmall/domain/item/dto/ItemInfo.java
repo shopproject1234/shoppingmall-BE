@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class ItemInfo {
 
+    private Long id;
+
     private String memberName;
 
     private String category;
@@ -26,6 +28,7 @@ public class ItemInfo {
     private Integer sales;
 
     public ItemInfo(Item item, Member member) {
+        this.id = item.getId();
         this.memberName = member.getName();
         this.category = item.getCategory().displayName;
         this.name = item.getName();

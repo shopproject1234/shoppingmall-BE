@@ -24,6 +24,7 @@
 </form><br>
 <button th:if="${mine} eq true">수정</button><br>
 <button th:if="${mine} eq true">삭제</button>
+<button th:if="!${mine}" th:onclick="|window.open('/shop/purchase/' + ${itemInfo.id}, 'purchaseInfo', 'width=400,height=500')|">구매</button>
 
 </body>
 </html>

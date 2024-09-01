@@ -45,5 +45,9 @@ public class Item {
         return item;
     }
 
+    public void minusCount(Integer count) {
+        this.itemCount = this.itemCount - count;
+    }
+
 
 }

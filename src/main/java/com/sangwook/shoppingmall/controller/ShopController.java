@@ -4,6 +4,7 @@ import com.sangwook.shoppingmall.argumentResolver.Login;
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
+import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.domain.member.Member;
 import com.sangwook.shoppingmall.service.ShopService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -42,5 +44,18 @@ public class ShopController {
         model.addAttribute("randomItem", randomItem);
         model.addAttribute("점수 순대로 정렬된 목록"); //TODO Batch로 정렬된 목록 추가
         return "shop/main";
+    }
+
+    @GetMapping("/shop/info/{itemId}")
+    public String itemInfo(@PathVariable Long itemId, @Login Member member, Model model) {
+        Item item = shopService.findItemById(itemId);
+        if (item.getMember().getId().equals(member.getId())) {
+            model.addAttribute("mine", true); //본인의 상품인지 확인
+        } else {
+            model.addAttribute("mine", false);
+        }
+        ItemInfo itemInfo = new ItemInfo(item, member);
+        model.addAttribute("itemInfo", itemInfo);
+        return "shop/itemInfo";
     }
 }

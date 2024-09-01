@@ -5,6 +5,25 @@
     <title>Title</title>
 </head>
 <body>
+<form th:object="${itemInfo}">
+    <h2 th:text="*{name}"></h2><br><br>
+    카테고리
+    <p th:text="*{category}"></p>
+    이름
+    <p th:text="*{name}"></p>
+    가격
+    <p th:text="*{price}"></p>
+    남은 수량
+    <p th:text="*{itemCount}"></p>
+    리뷰 수
+    <p th:text="*{reviewCount}"></p>
+    리뷰 평균 점수
+    <p th:text="*{reviewAverage}"></p>
+    판매량
+    <p th:text="*{sales}"></p>
+</form><br>
+<button th:if="${mine} eq true">수정</button><br>
+<button th:if="${mine} eq true">삭제</button>
 
 </body>
 </html>

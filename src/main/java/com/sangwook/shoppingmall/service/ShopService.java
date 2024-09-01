@@ -27,4 +27,8 @@ public class ShopService {
     public Page<Item> getRandomItem(Pageable pageable) {
         return itemRepository.findItemRandom(pageable);
     }
+
+    public Item findItemById(Long itemId) {
+        return itemRepository.findById(itemId).get();
+    }
 }

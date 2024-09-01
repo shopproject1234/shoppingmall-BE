@@ -33,7 +33,7 @@
             <tr th:each="item, stat : ${randomItem}">
                 <td th:text="${stat.count}"></td>
                 <td th:text="${item.category.displayName}"></td>
-                <td th:text="${item.name}"></td>
+                <td><a th:text="${item.name}" th:href="@{/shop/info/{itemId}(itemId=${item.id})}"></a></td>
                 <td th:text="${item.price}"></td>
                 <td th:text="${item.itemCount}"></td>
             </tr>

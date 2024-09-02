@@ -24,14 +24,12 @@
     <form th:object="${randomItem}">
         <table>
             <tr>
-                <td>카운트</td>
                 <td>카테고리</td>
                 <td>이름</td>
                 <td>가격</td>
                 <td>남은 수량</td>
             </tr>
-            <tr th:each="item, stat : ${randomItem}">
-                <td th:text="${stat.count}"></td>
+            <tr th:each="item : ${randomItem}">
                 <td th:text="${item.category.displayName}"></td>
                 <td><a th:text="${item.name}" th:href="@{/shop/info/{itemId}(itemId=${item.id})}"></a></td>
                 <td th:text="${item.price}"></td>
@@ -45,14 +43,12 @@
     <form th:object="${randomItem}">
         <table>
             <tr>
-                <td>카운트</td>
                 <td>카테고리</td>
                 <td>이름</td>
                 <td>가격</td>
                 <td>남은 수량</td>
             </tr>
-            <tr th:each="item, stat : ${randomItem}">
-                <td th:text="${stat.count}"></td>
+            <tr th:each="item : ${randomItem}">
                 <td th:text="${item.category.displayName}"></td>
                 <td th:text="${item.name}"></td>
                 <td th:text="${item.price}"></td>

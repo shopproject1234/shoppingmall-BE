@@ -3,6 +3,7 @@ package com.sangwook.shoppingmall.domain.item;
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
 import com.sangwook.shoppingmall.domain.member.Member;
+import com.sangwook.shoppingmall.domain.review.Review;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -45,8 +46,27 @@ public class Item {
         return item;
     }
 
-    public void minusCount(Integer count) {
+    public void purchased(Integer count) {
         this.itemCount = this.itemCount - count;
+        if (sales == null) {
+            sales = count;
+        } else {
+            sales += count;
+        }
+    }
+
+    public void plusReview(Review review) {
+        if (this.reviewAverage == null) {
+            this.reviewAverage = review.getPoint();
+        } else {
+            this.reviewAverage = Math.round(((reviewAverage * reviewCount) + review.getPoint()) / (reviewCount + 1) * 100) / 100.0f;
+        }
+
+        if (this.reviewCount == null) {
+            this.reviewCount = 1;
+        } else {
+            this.reviewCount += 1;
+        }
     }
 
 

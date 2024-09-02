@@ -41,6 +41,6 @@ public class ShopService {
         Purchase purchase = new Purchase(member, item, item.getCategory(), count, totalPrice);
         purchaseRepository.save(purchase);
 
-        item.minusCount(count);
+        item.purchased(count);
     }
 }

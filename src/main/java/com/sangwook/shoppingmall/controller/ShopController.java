@@ -8,11 +8,15 @@ import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.domain.member.Member;
 import com.sangwook.shoppingmall.domain.purchase.dto.PurchaseInfo;
 import com.sangwook.shoppingmall.domain.purchase.dto.PurchaseSubmit;
+import com.sangwook.shoppingmall.domain.review.dto.ReviewPage;
+import com.sangwook.shoppingmall.domain.review.dto.ReviewWrite;
+import com.sangwook.shoppingmall.service.ReviewService;
 import com.sangwook.shoppingmall.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class ShopController {
 
     private final ShopService shopService;
+    private final ReviewService reviewService;
 
     @GetMapping("/shop/add") // 상품 추가
     public String addItemForm(Model model) {
@@ -49,15 +54,25 @@ public class ShopController {
     }
 
     @GetMapping("/shop/info/{itemId}")
-    public String itemInfo(@PathVariable Long itemId, @Login Member member, Model model) {
+    public String itemInfo(@PathVariable Long itemId, @Login Member member, Model model, @PageableDefault(page = 1) Pageable pageable) {
         Item item = shopService.findItemById(itemId);
+        Page<ReviewPage> reviewPage = reviewService.findReview(itemId, pageable);
         if (item.getMember().getId().equals(member.getId())) {
             model.addAttribute("mine", true); //본인의 상품인지 확인 (수정, 삭제에 사용)
         } else {
             model.addAttribute("mine", false);
         }
         ItemInfo itemInfo = new ItemInfo(item, member);
+
+        int blockLimit = 10; //page 개수 설정
+        int startPage = (((int) Math.ceil(((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = Math.min((startPage + blockLimit - 1), reviewPage.getTotalPages());
+
         model.addAttribute("itemInfo", itemInfo);
+        model.addAttribute("reviewWrite", new ReviewWrite());
+        model.addAttribute("reviewPage", reviewPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "shop/itemInfo";
     }
 

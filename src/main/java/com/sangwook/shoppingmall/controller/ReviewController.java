@@ -1,7 +1,7 @@
 package com.sangwook.shoppingmall.controller;
 
 import com.sangwook.shoppingmall.argumentResolver.Login;
-import com.sangwook.shoppingmall.domain.member.Member;
+import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.review.dto.ReviewWrite;
 import com.sangwook.shoppingmall.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,8 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/review/write/{itemId}")
-    public String reviewWrite(@PathVariable Long itemId, @ModelAttribute("reviewWrite") ReviewWrite reviewWrite, @Login Member member) {
-        reviewService.reviewWrite(member, itemId, reviewWrite);
+    public String reviewWrite(@PathVariable Long itemId, @ModelAttribute("reviewWrite") ReviewWrite reviewWrite, @Login User user) {
+        reviewService.reviewWrite(user, itemId, reviewWrite);
         return "redirect:/shop/info/" + itemId;
     }
 }

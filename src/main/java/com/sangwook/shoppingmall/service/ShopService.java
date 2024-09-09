@@ -1,9 +1,9 @@
 package com.sangwook.shoppingmall.service;
 
+import com.sangwook.shoppingmall.domain.history.History;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
-import com.sangwook.shoppingmall.domain.member.Member;
-import com.sangwook.shoppingmall.domain.purchase.Purchase;
+import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.repository.ItemRepository;
 import com.sangwook.shoppingmall.repository.PurchaseRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +21,8 @@ public class ShopService {
     private final ItemRepository itemRepository;
     private final PurchaseRepository purchaseRepository;
 
-    public void add(AddItem addItem, Member member) {
-        Item item = Item.add(addItem, member);
+    public void add(AddItem addItem, User user) {
+        Item item = Item.add(addItem, user);
         itemRepository.save(item);
     }
 
@@ -34,13 +34,22 @@ public class ShopService {
         return itemRepository.findById(itemId).get();
     }
 
-    public void purchase(Long itemId, Member member, Integer count) {
+    public void purchase(Long itemId, User user, Integer count) {
         Item item = itemRepository.findById(itemId).get();
 
         int totalPrice = count * item.getPrice();
-        Purchase purchase = new Purchase(member, item, item.getCategory(), count, totalPrice);
-        purchaseRepository.save(purchase);
+        History history = new History(user, item, item.getCategory(), count, totalPrice);
+        purchaseRepository.save(history);
 
         item.purchased(count);
+    }
+
+    public void deleteItem(Long itemId) {
+        Item item = itemRepository.findById(itemId).get();
+        itemRepository.delete(item);
+    }
+
+    public void editItem(Long itemId) {
+
     }
 }

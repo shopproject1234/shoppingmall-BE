@@ -1,8 +1,8 @@
-package com.sangwook.shoppingmall.domain.purchase;
+package com.sangwook.shoppingmall.domain.history;
 
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.domain.item.Item;
-import com.sangwook.shoppingmall.domain.member.Member;
+import com.sangwook.shoppingmall.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-public class Purchase {
+public class History {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
-    private Member member;
+    @JoinColumn(name = "userId")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
@@ -31,17 +31,17 @@ public class Purchase {
 
     private Integer count;
 
-    private Integer totalPrice;
+    private Integer price;
 
-    public Purchase(Member member, Item item, Category category, Integer count, Integer totalPrice) {
-        this.member = member;
+    public History(User user, Item item, Category category, Integer count, Integer price) {
+        this.user = user;
         this.item = item;
         this.category = category;
         this.count = count;
-        this.totalPrice = totalPrice;
+        this.price = price;
         this.date = LocalDateTime.now();
     }
 
-    public Purchase() {
+    public History() {
     }
 }

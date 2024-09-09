@@ -1,4 +1,4 @@
-package com.sangwook.shoppingmall.domain.member.dto;
+package com.sangwook.shoppingmall.domain.user.dto;
 
 import com.sangwook.shoppingmall.constant.Gender;
 import jakarta.validation.constraints.*;

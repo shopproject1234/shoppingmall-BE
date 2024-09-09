@@ -1,7 +1,7 @@
 package com.sangwook.shoppingmall.argumentResolver;
 
 import com.sangwook.shoppingmall.constant.SessionConst;
-import com.sangwook.shoppingmall.domain.member.Member;
+import com.sangwook.shoppingmall.domain.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     public boolean supportsParameter(MethodParameter parameter) {
         log.info("supportsParameter 실행");
         boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
-        boolean hasMemberType = Member.class.isAssignableFrom(parameter.getParameterType());
+        boolean hasMemberType = User.class.isAssignableFrom(parameter.getParameterType());
 
         return hasLoginAnnotation && hasMemberType;
     }

@@ -1,4 +1,4 @@
-package com.sangwook.shoppingmall.domain.member.dto;
+package com.sangwook.shoppingmall.domain.user.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

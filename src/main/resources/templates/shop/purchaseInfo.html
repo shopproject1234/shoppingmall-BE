@@ -14,7 +14,7 @@
     </form>
     <p>===================================</p>
     <p>수량 선택</p>
-    <form th:object="${purchaseSubmit}" th:action="@{/shop/purchase/{itemId}(itemId=${purchaseInfo.itemId})}" method="post">
+    <form th:object="${purchaseSubmit}" th:action="@{/shop/history/{itemId}(itemId=${purchaseInfo.itemId})}" method="post">
         <select name="count" th:value="*{count}">
             <option th:each ="i : ${#numbers.sequence(1,5)}" th:value="${i}" th:text="${i}">
             </option>

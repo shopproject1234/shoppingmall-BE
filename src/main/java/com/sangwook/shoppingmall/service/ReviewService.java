@@ -1,7 +1,7 @@
 package com.sangwook.shoppingmall.service;
 
 import com.sangwook.shoppingmall.domain.item.Item;
-import com.sangwook.shoppingmall.domain.member.Member;
+import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.review.Review;
 import com.sangwook.shoppingmall.domain.review.dto.ReviewPage;
 import com.sangwook.shoppingmall.domain.review.dto.ReviewWrite;
@@ -24,11 +24,11 @@ public class ReviewService {
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
 
-    public void reviewWrite(Member member, Long itemId, ReviewWrite reviewWrite) {
-        Member getMember = memberRepository.findById(member.getId()).get();
+    public void reviewWrite(User user, Long itemId, ReviewWrite reviewWrite) {
+        User getUser = memberRepository.findById(user.getId()).get();
         Item getItem = itemRepository.findById(itemId).get();
 
-        Review review = new Review(getMember, getItem, reviewWrite);
+        Review review = new Review(getUser, getItem, reviewWrite);
         getItem.plusReview(review);
 
         reviewRepository.save(review);

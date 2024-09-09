@@ -5,9 +5,9 @@ import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
 import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
-import com.sangwook.shoppingmall.domain.member.Member;
-import com.sangwook.shoppingmall.domain.purchase.dto.PurchaseInfo;
-import com.sangwook.shoppingmall.domain.purchase.dto.PurchaseSubmit;
+import com.sangwook.shoppingmall.domain.user.User;
+import com.sangwook.shoppingmall.domain.history.dto.PurchaseInfo;
+import com.sangwook.shoppingmall.domain.history.dto.PurchaseSubmit;
 import com.sangwook.shoppingmall.domain.review.dto.ReviewPage;
 import com.sangwook.shoppingmall.domain.review.dto.ReviewWrite;
 import com.sangwook.shoppingmall.service.ReviewService;
@@ -40,8 +40,8 @@ public class ShopController {
     }
 
     @PostMapping("/shop/add")
-    public String addItem(@Login Member member, @ModelAttribute("addItem") AddItem addItem) {
-        shopService.add(addItem, member);
+    public String addItem(@Login User user, @ModelAttribute("addItem") AddItem addItem) {
+        shopService.add(addItem, user);
         return "redirect:/shop/main";
     }
 
@@ -54,15 +54,15 @@ public class ShopController {
     }
 
     @GetMapping("/shop/info/{itemId}")
-    public String itemInfo(@PathVariable Long itemId, @Login Member member, Model model, @PageableDefault(page = 1) Pageable pageable) {
+    public String itemInfo(@PathVariable Long itemId, @Login User user, Model model, @PageableDefault(page = 1) Pageable pageable) {
         Item item = shopService.findItemById(itemId);
         Page<ReviewPage> reviewPage = reviewService.findReview(itemId, pageable);
-        if (item.getMember().getId().equals(member.getId())) {
+        if (item.getUser().getId().equals(user.getId())) {
             model.addAttribute("mine", true); //본인의 상품인지 확인 (수정, 삭제에 사용)
         } else {
             model.addAttribute("mine", false);
         }
-        ItemInfo itemInfo = new ItemInfo(item, member);
+        ItemInfo itemInfo = new ItemInfo(item, user);
 
         int blockLimit = 10; //page 개수 설정
         int startPage = (((int) Math.ceil(((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
@@ -77,17 +77,23 @@ public class ShopController {
     }
 
     @GetMapping("/shop/purchase/{itemId}")
-    public String purchaseForm(@PathVariable Long itemId, @Login Member member, Model model) {
+    public String purchaseForm(@PathVariable Long itemId, @Login User user, Model model) {
         Item item = shopService.findItemById(itemId);
-        PurchaseInfo info = new PurchaseInfo(itemId, member.getName(), item.getItemCount(), item.getCategory(), item.getPrice(), item.getName());
+        PurchaseInfo info = new PurchaseInfo(itemId, user.getName(), item.getItemCount(), item.getCategory(), item.getPrice(), item.getName());
         model.addAttribute("purchaseInfo", info);
         model.addAttribute("purchaseSubmit", new PurchaseSubmit());
         return "shop/purchaseInfo";
     }
 
     @PostMapping("/shop/purchase/{itemId}")
-    public String purchaseItem(@PathVariable Long itemId, @Login Member member, @ModelAttribute(name = "purchaseSubmit") PurchaseSubmit purchaseSubmit) {
-        shopService.purchase(itemId, member, purchaseSubmit.getCount());
+    public String purchaseItem(@PathVariable Long itemId, @Login User user, @ModelAttribute(name = "purchaseSubmit") PurchaseSubmit purchaseSubmit) {
+        shopService.purchase(itemId, user, purchaseSubmit.getCount());
+        return "redirect:/shop/main";
+    }
+
+    @PostMapping("/shop/delete/{itemId}")
+    public String deleteItem(@PathVariable Long itemId) {
+        shopService.deleteItem(itemId);
         return "redirect:/shop/main";
     }
 }

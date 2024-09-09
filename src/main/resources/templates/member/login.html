@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>SHOPPING MALL</h1>
-    <form th:action="@{/member/login}" th:object="${memberLogin}" method="post">
+    <form th:action="@{/user/login}" th:object="${memberLogin}" method="post">
         <label>
             아이디 : <input type="email" th:field="*{email}">
         </label>
@@ -17,7 +17,7 @@
         <button>로그인</button>
         <br>
     </form>
-    <form th:action="@{/member/getRegister}" method="get">
+    <form th:action="@{/user/getRegister}" method="get">
         <button>회원가입</button>
     </form>
 

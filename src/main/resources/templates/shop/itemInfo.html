@@ -16,8 +16,8 @@
     <p th:text="*{sales} != null ? '판매량: ' + *{sales} : '판매량: 판매량이 없습니다.'"></p>
 </form><br>
 <button th:if="${mine} eq true">수정</button><br>
-<button th:if="${mine} eq true">삭제</button>
-<button th:if="!${mine}" th:onclick="|window.open('/shop/purchase/' + ${itemInfo.id}, 'purchaseInfo', 'width=400,height=500')|">구매</button>
+<button th:if="${mine} eq true" th:onclick="@{/shop/delete/{itemId}(itemId=${itemInfo.id})}">삭제</button>
+<button th:if="!${mine}" th:onclick="|window.open('/shop/history/' + ${itemInfo.id}, 'purchaseInfo', 'width=400,height=500')|">구매</button>
 
 <h3>리뷰</h3>
 <form th:object="${reviewWrite}" th:action="@{/review/write/{itemId}(itemId=${itemInfo.id})}" method="post">

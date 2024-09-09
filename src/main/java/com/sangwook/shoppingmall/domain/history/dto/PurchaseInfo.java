@@ -1,4 +1,4 @@
-package com.sangwook.shoppingmall.domain.purchase.dto;
+package com.sangwook.shoppingmall.domain.history.dto;
 
 import com.sangwook.shoppingmall.constant.Category;
 import lombok.Getter;

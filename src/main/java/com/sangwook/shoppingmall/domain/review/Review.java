@@ -1,7 +1,7 @@
 package com.sangwook.shoppingmall.domain.review;
 
 import com.sangwook.shoppingmall.domain.item.Item;
-import com.sangwook.shoppingmall.domain.member.Member;
+import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.review.dto.ReviewWrite;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,27 +17,24 @@ public class Review {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId")
-    private Member member;
+    @JoinColumn(name = "userId")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "itemId")
     private Item item;
 
-    private String title;
-
     private String content;
 
-    private Float point;
+    private Float score;
 
     private LocalDateTime time;
 
-    public Review(Member member, Item item, ReviewWrite reviewWrite) {
-        this.member = member;
+    public Review(User user, Item item, ReviewWrite reviewWrite) {
+        this.user = user;
         this.item = item;
-        this.title = reviewWrite.getTitle();
         this.content = reviewWrite.getContent();
-        this.point = reviewWrite.getPoint();
+        this.score = reviewWrite.getScore();
         this.time = LocalDateTime.now();
     }
 

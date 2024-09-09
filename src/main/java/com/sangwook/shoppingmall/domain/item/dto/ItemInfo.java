@@ -2,7 +2,7 @@ package com.sangwook.shoppingmall.domain.item.dto;
 
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.domain.item.Item;
-import com.sangwook.shoppingmall.domain.member.Member;
+import com.sangwook.shoppingmall.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,9 +28,9 @@ public class ItemInfo {
 
     private Integer sales;
 
-    public ItemInfo(Item item, Member member) {
+    public ItemInfo(Item item, User user) {
         this.id = item.getId();
-        this.memberName = member.getName();
+        this.memberName = user.getName();
         this.category = item.getCategory();
         this.name = item.getName();
         this.price = item.getPrice();

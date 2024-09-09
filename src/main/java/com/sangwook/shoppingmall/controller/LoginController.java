@@ -2,9 +2,9 @@ package com.sangwook.shoppingmall.controller;
 
 import com.sangwook.shoppingmall.constant.Gender;
 import com.sangwook.shoppingmall.constant.SessionConst;
-import com.sangwook.shoppingmall.domain.member.Member;
-import com.sangwook.shoppingmall.domain.member.dto.MemberLogin;
-import com.sangwook.shoppingmall.domain.member.dto.MemberRegister;
+import com.sangwook.shoppingmall.domain.user.User;
+import com.sangwook.shoppingmall.domain.user.dto.MemberLogin;
+import com.sangwook.shoppingmall.domain.user.dto.MemberRegister;
 import com.sangwook.shoppingmall.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -33,10 +33,10 @@ public class LoginController {
 
     @PostMapping("/member/login")
     public String login(@ModelAttribute("memberLogin") MemberLogin memberLogin, HttpServletRequest request) {
-        Member member = memberService.login(memberLogin);
+        User user = memberService.login(memberLogin);
 
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER, member);
+        session.setAttribute(SessionConst.LOGIN_MEMBER, user);
 
         return "redirect:/shop/main";
     }

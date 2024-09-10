@@ -57,9 +57,9 @@ public class Item {
 
     public void plusReview(Review review) {
         if (this.reviewAverage == null) {
-            this.reviewAverage = review.getPoint();
+            this.reviewAverage = review.getScore();
         } else {
-            this.reviewAverage = Math.round(((reviewAverage * reviewCount) + review.getPoint()) / (reviewCount + 1) * 100) / 100.0f;
+            this.reviewAverage = Math.round(((reviewAverage * reviewCount) + review.getScore()) / (reviewCount + 1) * 100) / 100.0f;
         }
 
         if (this.reviewCount == null) {

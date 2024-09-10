@@ -35,9 +35,8 @@ public class ReviewService {
 
     }
 
-    public Page<ReviewPage> findReview(Long itemId, Pageable pageable) {
+    public void findReview(Long itemId, Pageable pageable) {
         int page = pageable.getPageNumber() - 1;
         PageRequest pageRequest = PageRequest.of(page, 10);
-        return reviewRepository.findReviewPage(itemId, pageRequest);
     }
 }

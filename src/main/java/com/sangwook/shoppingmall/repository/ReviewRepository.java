@@ -10,6 +10,4 @@ import org.springframework.data.repository.query.Param;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    @Query(value = "select new com.sangwook.shoppingmall.domain.review.dto.ReviewPage(r.member.name, r.title, r.content, r.point, r.time) from Review r where r.item.id=:itemId order by r.time desc")
-    Page<ReviewPage> findReviewPage(@Param("itemId") Long itemId, Pageable pageable);
 }

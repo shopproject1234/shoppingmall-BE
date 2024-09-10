@@ -21,7 +21,7 @@ class UserServiceTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private MemberService memberService;
+    private UserService userService;
 
     @Test
     @DisplayName("사용자는 회원가입을 할 수 있다")

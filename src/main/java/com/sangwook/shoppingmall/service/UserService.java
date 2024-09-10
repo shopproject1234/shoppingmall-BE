@@ -1,8 +1,8 @@
 package com.sangwook.shoppingmall.service;
 
 import com.sangwook.shoppingmall.domain.user.User;
-import com.sangwook.shoppingmall.domain.user.dto.MemberLogin;
-import com.sangwook.shoppingmall.domain.user.dto.MemberRegister;
+import com.sangwook.shoppingmall.domain.user.dto.UserLogin;
+import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
 import com.sangwook.shoppingmall.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,25 +16,23 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class MemberService {
+public class UserService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public void register(MemberRegister memberRegister) {
+    public void register(UserRegister userRegister) {
 
-        Optional<User> getMember = memberRepository.findByEmail(memberRegister.getEmail());
+        Optional<User> getMember = memberRepository.findByEmail(userRegister.getEmail());
         if (getMember.isPresent()) {
             //TODO 이미 아이디가 있으면 view로 돌아가기
         }
-        String encoded = passwordEncoder.encode(memberRegister.getPassword());
-        User user = User.memberRegister(memberRegister, encoded);
-        memberRepository.save(user);
+        String encoded = passwordEncoder.encode(userRegister.getPassword());
     }
 
-    public User login(MemberLogin memberLogin) {
-        Optional<User> member = memberRepository.findByEmail(memberLogin.getEmail());
-        if (member.isEmpty() || !passwordEncoder.matches(memberLogin.getPassword(), member.get().getPassword())) {
+    public User login(UserLogin userLogin) {
+        Optional<User> member = memberRepository.findByEmail(userLogin.getEmail());
+        if (member.isEmpty() || !passwordEncoder.matches(userLogin.getPassword(), member.get().getPassword())) {
             throw new IllegalStateException();
         }
         return member.get();

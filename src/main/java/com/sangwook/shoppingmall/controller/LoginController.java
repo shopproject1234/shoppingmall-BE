@@ -1,69 +1,37 @@
 package com.sangwook.shoppingmall.controller;
 
-import com.sangwook.shoppingmall.constant.Gender;
-import com.sangwook.shoppingmall.constant.SessionConst;
-import com.sangwook.shoppingmall.domain.user.User;
-import com.sangwook.shoppingmall.domain.user.dto.MemberLogin;
-import com.sangwook.shoppingmall.domain.user.dto.MemberRegister;
-import com.sangwook.shoppingmall.service.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
+import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
+import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
+import com.sangwook.shoppingmall.service.EmailService;
+import com.sangwook.shoppingmall.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @Slf4j
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final MemberService memberService;
+    private final UserService userService;
+    private final EmailService emailService;
 
-    @GetMapping("/")
-    public String getLogin(Model model) {
-        model.addAttribute("memberLogin", new MemberLogin());
-        return "member/login";
+    @PostMapping("/user/register")
+    public void register(@RequestBody UserRegister userRegister) {
+
     }
 
-    @PostMapping("/member/login")
-    public String login(@ModelAttribute("memberLogin") MemberLogin memberLogin, HttpServletRequest request) {
-        User user = memberService.login(memberLogin);
-
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER, user);
-
-        return "redirect:/shop/main";
+    @PostMapping("/user/email")
+    public void sendEmail(@RequestBody EmailCheck check) {
+        emailService.sendCode(check.getEmail());
     }
 
-    @GetMapping("/member/getRegister")
-    public String getRegister(Model model) {
-        model.addAttribute("memberRegister", new MemberRegister());
-        model.addAttribute("genders", Gender.values());
-        return "member/register";
-    }
-
-    @PostMapping("/member/register")
-    public String register(@Valid @ModelAttribute("memberRegister") MemberRegister memberRegister, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("genders", Gender.values());
-            return "member/register";
-        }
-        memberService.register(memberRegister);
-
-        //TODO 회원가입 후 alert창 하나 띄우면 좋을듯?
-        return "redirect:/";
-    }
-
-    @PostMapping("/member/logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.invalidate();
-        return "redirect:/";
+    @GetMapping("/user/email")
+    public void checkCode(@RequestBody EmailCheck check) {
+        Boolean isChecked = emailService.checkCode(check);
+        log.info("isChecked: {}", isChecked);
     }
 }

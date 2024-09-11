@@ -1,6 +1,5 @@
 package com.sangwook.shoppingmall.service;
 
-import com.sangwook.shoppingmall.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +17,16 @@ class UserServiceTest {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
     private UserService userService;
 
     @Test
-    @DisplayName("사용자는 회원가입을 할 수 있다")
+    @DisplayName("사용자는 회원가입 시 이메일 인증을 한다")
     void test1_1() {
 
     }
 
     @Test
-    @DisplayName("사용자는 회원가입 시 이메일 인증을 한다")
+    @DisplayName("사용자는 회원가입을 할 수 있다")
     void test1_2() {
 
     }

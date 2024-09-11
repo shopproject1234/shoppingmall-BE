@@ -21,17 +21,17 @@ public class LoginController {
 
     @PostMapping("/user/register")
     public void register(@RequestBody UserRegister userRegister) {
+        //사용자가 이메일 확인을 받지않았다면(emailChecked=false) 돌려보내기
 
     }
 
-    @PostMapping("/user/email")
+    @PostMapping("/user/email/auth")
     public void sendEmail(@RequestBody EmailCheck check) {
-        emailService.sendCode(check.getEmail());
+        emailService.sendMail(check.getEmail());
     }
 
-    @GetMapping("/user/email")
-    public void checkCode(@RequestBody EmailCheck check) {
-        Boolean isChecked = emailService.checkCode(check);
-        log.info("isChecked: {}", isChecked);
+    @PostMapping("/user/email/check")
+    public Boolean checkCode(@RequestBody EmailCheck check) {
+        return emailService.checkCode(check);
     }
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,8 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    public void sendCode(String email) {
+    @Async
+    public void sendMail(String email) {
         int code = generateCode();
         MimeMessage mail = createMail(email, code);
         javaMailSender.send(mail);

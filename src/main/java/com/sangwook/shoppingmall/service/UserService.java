@@ -21,13 +21,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public void register(UserRegister userRegister) {
-
+    public User register(UserRegister userRegister) {
         Optional<User> getMember = userRepository.findByEmail(userRegister.getEmail());
         if (getMember.isPresent()) {
-            //TODO 이미 아이디가 있으면 view로 돌아가기
+            throw new IllegalStateException();//FIXME
         }
         String encoded = passwordEncoder.encode(userRegister.getPassword());
+        User user = User.register(userRegister, encoded);
+        return userRepository.save(user);
     }
 
     public User login(UserLogin userLogin) {
@@ -36,6 +37,14 @@ public class UserService {
             throw new IllegalStateException();
         }
         return member.get();
+    }
+
+    private User getUserByEmail(String email) {
+        Optional<User> getUser = userRepository.findByEmail(email);
+        if (getUser.isEmpty()) {
+            throw new IllegalStateException(); //FIXME
+        }
+        return getUser.get();
     }
 
 

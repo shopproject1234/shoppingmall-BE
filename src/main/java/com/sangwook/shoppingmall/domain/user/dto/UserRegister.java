@@ -24,4 +24,13 @@ public class UserRegister {
 
     private Gender gender;
 
+    public UserRegister(String email, String nickname, String password, String phoneNumber, LocalDate birth, Integer age, Gender gender) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.birth = birth;
+        this.age = age;
+        this.gender = gender;
+    }
 }

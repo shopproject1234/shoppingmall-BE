@@ -1,6 +1,7 @@
 package com.sangwook.shoppingmall.domain.user;
 
 import com.sangwook.shoppingmall.constant.Gender;
+import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -30,7 +31,17 @@ public class User {
 
     private LocalDate birth;
 
-
+    public static User register(UserRegister userRegister, String encoded) {
+        User user = new User();
+        user.email = userRegister.getEmail();
+        user.name = userRegister.getNickname();
+        user.password = encoded;
+        user.age = userRegister.getAge();
+        user.gender = userRegister.getGender();
+        user.phoneNumber = userRegister.getPhoneNumber();
+        user.birth = userRegister.getBirth();
+        return user;
+    }
 
     public User() {
 

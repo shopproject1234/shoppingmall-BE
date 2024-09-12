@@ -6,5 +6,7 @@ spring:
     password:
   profiles:
     include: security
-
+  jpa:
+    hibernate:
+      ddl-auto: create
 

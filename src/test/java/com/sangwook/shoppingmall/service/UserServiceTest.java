@@ -1,6 +1,10 @@
 package com.sangwook.shoppingmall.service;
 
+import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Gender;
+import com.sangwook.shoppingmall.constant.Preference;
+import com.sangwook.shoppingmall.domain.interest.Interest;
+import com.sangwook.shoppingmall.domain.interest.dto.InterestInfo;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
@@ -13,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -74,6 +81,7 @@ class UserServiceTest {
     @Test
     @DisplayName("사용자는 로그인할 수 있다")
     void test2() {
+        //TODO 로그인 부분 Session으로 관리하므로 LoginControllerTest로 옮길 예정
 
     }
 
@@ -86,12 +94,71 @@ class UserServiceTest {
     @Test
     @DisplayName("사용자는 관심사를 정할 수 있다")
     void test4() {
+        //given
+        UserRegister userRegister = new UserRegister("tkddnr@naver.com",
+                "상욱", "123123",
+                "01011112222", LocalDate.of(2012, 11, 22), 13,
+                Gender.MALE);
+        User saved = userService.register(userRegister);
 
+        //when
+        Interest interest = userService.addInterest(saved.getId(), Category.FURNITURE);
+
+        //then
+        assertThat(interest.getUser().getId()).isEqualTo(saved.getId());
+        assertThat(interest.getCategory()).isEqualTo(Category.FURNITURE);
+        assertThat(interest.getScale()).isEqualTo(Preference.INTERESTED);
     }
 
     @Test
     @DisplayName("사용자는 관심사를 확인할 수 있다")
     void test5() {
+        //given
+        UserRegister userRegister = new UserRegister("tkddnr@naver.com",
+                "상욱", "123123",
+                "01011112222", LocalDate.of(2012, 11, 22), 13,
+                Gender.MALE);
+        User saved = userService.register(userRegister);
+
+        //when
+        userService.addInterest(saved.getId(), Category.FURNITURE);
+        userService.addInterest(saved.getId(), Category.FABRIC);
+
+        List<InterestInfo> interests = userService.getInterests(saved.getId());
+        List<Category> categories = new ArrayList<>();
+
+        categories.add(interests.get(0).getCategory());
+        categories.add(interests.get(1).getCategory());
+
+        //then
+        assertThat(interests.size()).isEqualTo(2);
+        assertThat(categories.contains(Category.FURNITURE)).isTrue();
+        assertThat(categories.contains(Category.FABRIC)).isTrue();
+    }
+
+    @Test
+    @DisplayName("사용자는 관심사를 삭제 할 수 있다")
+    void test6_1() {
+        //given
+        UserRegister userRegister = new UserRegister("tkddnr@naver.com",
+                "상욱", "123123",
+                "01011112222", LocalDate.of(2012, 11, 22), 13,
+                Gender.MALE);
+        User saved = userService.register(userRegister);
+
+        //when
+        userService.addInterest(saved.getId(), Category.FURNITURE);
+        userService.deleteInterest(saved.getId(), Category.FURNITURE);
+
+        List<InterestInfo> interests = userService.getInterests(saved.getId());
+
+        //then
+        assertThat(interests.isEmpty()).isTrue();
+    }
+
+    @Test
+    @DisplayName("사용자는 관심사를 삭제 할 수 있지만 구매, 검색으로 인한 관심사는 삭제 불가능하다")
+    void test6_2() {
 
     }
 

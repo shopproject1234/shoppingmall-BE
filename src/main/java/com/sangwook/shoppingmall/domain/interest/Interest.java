@@ -24,10 +24,12 @@ public class Interest {
     @Enumerated(EnumType.STRING)
     private Preference scale;
 
-    public Interest(User user, Category category, Preference scale) {
-        this.user = user;
-        this.category = category;
-        this.scale = scale;
+    public static Interest interested(User user, Category category) {
+        Interest interest = new Interest();
+        interest.user = user;
+        interest.category = category;
+        interest.scale = Preference.INTERESTED;
+        return interest;
     }
 
     public Interest() {

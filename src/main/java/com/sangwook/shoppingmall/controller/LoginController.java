@@ -1,10 +1,14 @@
 package com.sangwook.shoppingmall.controller;
 
+import com.sangwook.shoppingmall.constant.SessionConst;
+import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
+import com.sangwook.shoppingmall.domain.user.dto.UserLogin;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
 import com.sangwook.shoppingmall.service.EmailService;
 import com.sangwook.shoppingmall.service.RedisService;
 import com.sangwook.shoppingmall.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +31,13 @@ public class LoginController {
             throw new IllegalStateException();//FIXME
         }
         userService.register(userRegister);
+    }
+
+    @PostMapping("/user/login")
+    public String login(@RequestBody UserLogin userLogin, HttpServletRequest request) {
+        User user = userService.login(userLogin);
+        request.getSession().setAttribute(SessionConst.LOGIN_USER, user);
+        return "ok";
     }
 
     @PostMapping("/user/email/auth")

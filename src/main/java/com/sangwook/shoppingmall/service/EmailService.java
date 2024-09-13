@@ -5,6 +5,6 @@ import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
 public interface EmailService {
 
     void sendMail(String email);
-    Boolean checkCode(EmailCheck check);
+    Boolean verifyCode(EmailCheck check);
 
 }

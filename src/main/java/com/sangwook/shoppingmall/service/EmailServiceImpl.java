@@ -36,8 +36,12 @@ public class EmailServiceImpl implements EmailService{
     }
 
     @Override
-    public Boolean checkCode(EmailCheck check) {
-        return redisService.getCode(check.getEmail()).equals(check.getCode());
+    public Boolean verifyCode(EmailCheck check) {
+        if (redisService.getCode(check.getEmail()).equals(check.getCode())) {
+            redisService.verified(check.getEmail());
+            return true;
+        }
+        return false;
     }
 
     private MimeMessage createMail(String email, int code) {

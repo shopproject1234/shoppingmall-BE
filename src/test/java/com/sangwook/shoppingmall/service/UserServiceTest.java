@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,7 +45,7 @@ class UserServiceTest {
         emailCheck.setCode(fakeEmailService.code);
 
         //when
-        Boolean isChecked = fakeEmailService.checkCode(emailCheck);
+        Boolean isChecked = fakeEmailService.verifyCode(emailCheck);
 
         //then
         assertThat(isChecked).isTrue();
@@ -60,7 +59,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", LocalDate.of(2012, 11, 22), 13,
+                "01011112222", 20121122, 13,
                 Gender.MALE);
 
         //when
@@ -97,7 +96,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", LocalDate.of(2012, 11, 22), 13,
+                "01011112222", 20121122, 13,
                 Gender.MALE);
         User saved = userService.register(userRegister);
 
@@ -116,7 +115,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", LocalDate.of(2012, 11, 22), 13,
+                "01011112222", 20121122, 13,
                 Gender.MALE);
         User saved = userService.register(userRegister);
 
@@ -138,11 +137,11 @@ class UserServiceTest {
 
     @Test
     @DisplayName("사용자는 관심사를 삭제 할 수 있다")
-    void test6_1() {
+    void test6() {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", LocalDate.of(2012, 11, 22), 13,
+                "01011112222", 20121122, 13,
                 Gender.MALE);
         User saved = userService.register(userRegister);
 
@@ -154,12 +153,6 @@ class UserServiceTest {
 
         //then
         assertThat(interests.isEmpty()).isTrue();
-    }
-
-    @Test
-    @DisplayName("사용자는 관심사를 삭제 할 수 있지만 구매, 검색으로 인한 관심사는 삭제 불가능하다")
-    void test6_2() {
-
     }
 
 }

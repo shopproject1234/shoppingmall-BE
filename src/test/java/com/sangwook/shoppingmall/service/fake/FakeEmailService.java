@@ -20,7 +20,7 @@ public class FakeEmailService implements EmailService {
     }
 
     @Override
-    public Boolean checkCode(EmailCheck check) {
+    public Boolean verifyCode(EmailCheck check) {
         return emailAndCode.get(check.getEmail()).equals(check.getCode());
     }
 

@@ -39,11 +39,20 @@ public class User {
         user.age = userRegister.getAge();
         user.gender = userRegister.getGender();
         user.phoneNumber = userRegister.getPhoneNumber();
-        user.birth = userRegister.getBirth();
+        user.birth = birthConverter(userRegister.getBirth());
         return user;
     }
 
     public User() {
 
+    }
+
+    private static LocalDate birthConverter(Integer intBirth) {
+        String stringBirth = intBirth.toString();
+        int year = Integer.parseInt(stringBirth.substring(0, 4));
+        int month = Integer.parseInt(stringBirth.substring(4, 6));
+        int day = Integer.parseInt(stringBirth.substring(6));
+
+        return LocalDate.of(year, month, day);
     }
 }

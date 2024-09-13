@@ -41,7 +41,7 @@ public class UserService {
     public User login(UserLogin userLogin) {
         User user = getUserByEmail(userLogin.getEmail());
         if (!passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
-            throw new IllegalStateException();
+            throw new IllegalStateException();//FIXME
         }
         return user;
     }

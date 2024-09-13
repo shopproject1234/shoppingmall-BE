@@ -31,4 +31,9 @@ public class RedisService {
         }
         return values.get(email);
     }
+
+    public void verified(String email) {
+        ValueOperations<String, Integer> values = redisTemplate.opsForValue();
+        values.getAndSet(email, 1);
+    }
 }

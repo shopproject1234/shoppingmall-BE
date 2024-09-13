@@ -3,6 +3,7 @@ package com.sangwook.shoppingmall.controller;
 import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
 import com.sangwook.shoppingmall.service.EmailService;
+import com.sangwook.shoppingmall.service.RedisService;
 import com.sangwook.shoppingmall.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +18,15 @@ public class LoginController {
 
     private final UserService userService;
     private final EmailService emailService;
+    private final RedisService redisService;
 
     @PostMapping("/user/register")
     public void register(@RequestBody UserRegister userRegister) {
-        //사용자가 이메일 확인을 받지않았다면(emailChecked=false) 돌려보내기
-
+        //사용자가 이메일 확인을 받지않았다면(code != 1일 경우) 돌려보내기
+        if (!redisService.getCode(userRegister.getEmail()).equals(1)) {
+            throw new IllegalStateException();//FIXME
+        }
+        userService.register(userRegister);
     }
 
     @PostMapping("/user/email/auth")
@@ -29,8 +34,8 @@ public class LoginController {
         emailService.sendMail(check.getEmail());
     }
 
-    @PostMapping("/user/email/check")
-    public Boolean checkCode(@RequestBody EmailCheck check) {
-        return emailService.checkCode(check);
+    @PostMapping("/user/email/verify")
+    public Boolean verifyCode(@RequestBody EmailCheck check) {
+        return emailService.verifyCode(check);
     }
 }

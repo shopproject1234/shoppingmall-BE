@@ -18,13 +18,13 @@ public class UserRegister {
 
     private String phoneNumber;
 
-    private LocalDate birth;
+    private Integer birth;
 
     private Integer age;
 
     private Gender gender;
 
-    public UserRegister(String email, String nickname, String password, String phoneNumber, LocalDate birth, Integer age, Gender gender) {
+    public UserRegister(String email, String nickname, String password, String phoneNumber, Integer birth, Integer age, Gender gender) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;

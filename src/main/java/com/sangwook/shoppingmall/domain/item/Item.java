@@ -36,13 +36,17 @@ public class Item {
 
     private Float score = 0f;
 
+    @Column(length = 1000)
+    private String itemInfo;
+
     public static Item add(AddItem addItem, User user) {
         Item item = new Item();
         item.category = addItem.getCategory();
-        item.name = addItem.getName();
+        item.name = addItem.getItemName();
         item.price = addItem.getPrice();
         item.itemCount = addItem.getItemCount();
         item.user = user;
+        item.itemInfo = addItem.getItemInfo();
         return item;
     }
 

@@ -20,12 +20,10 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(InterceptorRegistry registry) { //FIXME 배포 시 수정 필요
         registry.addInterceptor(new LoginInterceptor())
                 .order(1)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/", "/member/login", "/member/getRegister", "/member/register",
-                        "/css/**", "/*.ico", "/error", "/user/**");
+                .excludePathPatterns("/**");
     }
 
     @Bean

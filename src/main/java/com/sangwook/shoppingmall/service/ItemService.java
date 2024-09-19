@@ -2,6 +2,7 @@ package com.sangwook.shoppingmall.service;
 
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
+import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.domain.itemImage.ItemImage;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.repository.ImageRepository;
@@ -38,6 +39,13 @@ public class ItemService {
             return;
         }
         throw new IllegalStateException(); //FIXME
+    }
+
+    public ItemInfo getInfo(Long itemId) {
+        Item item = getItem(itemId);
+        List<ItemImage> image = imageRepository.findByItemId(itemId);
+
+        return new ItemInfo(item, item.getUser(), image);
     }
 
     private Item getItem(Long itemId) {

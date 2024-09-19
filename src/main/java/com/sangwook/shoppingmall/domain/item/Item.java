@@ -7,6 +7,8 @@ import com.sangwook.shoppingmall.domain.review.Review;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 public class Item {
@@ -36,6 +38,8 @@ public class Item {
 
     private Float score = 0f;
 
+    private LocalDateTime time;
+
     @Column(length = 1000)
     private String itemInfo;
 
@@ -47,6 +51,10 @@ public class Item {
         item.itemCount = addItem.getItemCount();
         item.user = user;
         item.itemInfo = addItem.getItemInfo();
+        item.time = LocalDateTime.now();
+        item.reviewCount = 0;
+        item.reviewAverage = 0.f;
+        item.sales = 0;
         return item;
     }
 

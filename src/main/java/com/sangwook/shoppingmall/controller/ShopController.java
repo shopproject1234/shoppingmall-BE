@@ -2,6 +2,7 @@ package com.sangwook.shoppingmall.controller;
 
 import com.sangwook.shoppingmall.argumentResolver.Login;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
+import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,10 @@ public class ShopController {
     @DeleteMapping("/item/{item_id}/delete")
     public void deleteItem(@Login User user, @PathVariable("item_id") Long itemId) {
         itemService.delete(user, itemId);
+    }
+
+    @GetMapping("/item/{item_id}/info")
+    public ItemInfo itemInfo(@PathVariable("item_id") Long itemId) {
+        return itemService.getInfo(itemId);
     }
 }

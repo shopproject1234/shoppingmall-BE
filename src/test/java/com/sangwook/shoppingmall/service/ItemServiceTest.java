@@ -4,6 +4,7 @@ import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Gender;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
+import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.domain.itemImage.ItemImage;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
@@ -145,7 +146,41 @@ public class ItemServiceTest {
     @Test
     @DisplayName("사용자는 상품 상세 페이지에서 상품의 상세 정보를 확인할 수 있다")
     void test5() {
+        //given
+        AddItem addItem = new AddItem();
+        addItem.setItemName("장롱");
+        addItem.setItemCount(3);
+        addItem.setItemInfo("장롱입니다 매우 상태가 좋습니다");
+        addItem.setCategory(Category.FURNITURE);
+        addItem.setPrice(1_000_000);
+        List<String> image = List.of("imageLink1", "imageLink2", "imageLink3");
+        addItem.setImage(image);
+        Item item = itemService.add(user, addItem);
 
+        //when
+        ItemInfo info = itemService.getInfo(item.getId());
+        List<ItemImage> images = imageRepository.findByItemId(item.getId());
+
+        //then
+        assertThat(info.getItemId()).isEqualTo(item.getId());
+        assertThat(info.getItemName()).isEqualTo(item.getName());
+        assertThat(info.getPrice()).isEqualTo(item.getPrice());
+        assertThat(info.getCategory()).isEqualTo(item.getCategory());
+        assertThat(info.getItemCount()).isEqualTo(item.getItemCount());
+        assertThat(info.getItemInfo()).isEqualTo(item.getItemInfo());
+
+        assertThat(info.getUploadUserId()).isEqualTo(item.getUser().getId());
+        assertThat(info.getUploadUserName()).isEqualTo(item.getUser().getName());
+
+        assertThat(info.getImage().size()).isEqualTo(3);
+        List<String> getLink = info.getImage();
+        for (ItemImage itemImage : images) {
+            assertThat(getLink.contains(itemImage.getImageLink())).isTrue();
+        }
+
+        assertThat(info.getReviewCount()).isEqualTo(0);
+        assertThat(info.getReviewAverage()).isEqualTo(0.f);
+        assertThat(info.getSales()).isEqualTo(0);
     }
 
 }

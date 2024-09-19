@@ -29,4 +29,22 @@ public class ItemService {
         imageRepository.saveAll(images);
         return item;
     }
+
+    public void delete(User user, Long itemId) {
+        Item item = getItem(itemId);
+        if (checkMine(user, item)) {
+            itemRepository.delete(item);
+            imageRepository.deleteAllByItemId(itemId);
+            return;
+        }
+        throw new IllegalStateException(); //FIXME
+    }
+
+    private Item getItem(Long itemId) {
+        return itemRepository.findById(itemId).get();
+    }
+
+    private Boolean checkMine(User user, Item item) {
+        return item.getUser().equals(user);
+    }
 }

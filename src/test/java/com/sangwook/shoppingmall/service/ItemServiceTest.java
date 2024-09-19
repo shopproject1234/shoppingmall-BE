@@ -17,10 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -35,6 +36,9 @@ public class ItemServiceTest {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
 
     User user;
 
@@ -85,8 +89,51 @@ public class ItemServiceTest {
 
     @Test
     @DisplayName("사용자는 본인이 올린 상품을 삭제할 수 있다")
-    void test3() {
+    void test3_1() {
+        //given
+        AddItem addItem = new AddItem();
+        addItem.setItemName("장롱");
+        addItem.setItemCount(3);
+        addItem.setItemInfo("장롱입니다 매우 상태가 좋습니다");
+        addItem.setCategory(Category.FURNITURE);
+        addItem.setPrice(1_000_000);
+        List<String> image = List.of("imageLink1", "imageLink2", "imageLink3");
+        addItem.setImage(image);
+        Item item = itemService.add(user, addItem);
 
+        //when
+        itemService.delete(user, item.getId());
+
+        //then
+        Optional<Item> getItem = itemRepository.findById(item.getId());
+        assertThat(getItem).isEmpty();
+        assertThat(imageRepository.findByItemId(item.getId())).isEmpty();
+    }
+
+    @Test
+    @DisplayName("사용자는 본인이 올리지 않은 상품은 삭제할 수 없다")
+    void test3_2() {
+        //given
+        AddItem addItem = new AddItem();
+        addItem.setItemName("장롱");
+        addItem.setItemCount(3);
+        addItem.setItemInfo("장롱입니다 매우 상태가 좋습니다");
+        addItem.setCategory(Category.FURNITURE);
+        addItem.setPrice(1_000_000);
+        List<String> image = List.of("imageLink1", "imageLink2", "imageLink3");
+        addItem.setImage(image);
+        Item item = itemService.add(user, addItem);
+
+        UserRegister userRegister = new UserRegister("tkddnr123@naver.com",
+                "상욱2", "123123",
+                "01011112222", 20121122, 13,
+                Gender.MALE);
+        User user2 = userService.register(userRegister);
+
+        //when
+
+        //then
+        assertThatThrownBy(() -> itemService.delete(user2, item.getId())).isInstanceOf(IllegalStateException.class);
     }
 
     @Test

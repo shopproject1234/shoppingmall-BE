@@ -6,9 +6,7 @@ import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,5 +18,10 @@ public class ShopController {
     @PostMapping("/item/upload")
     public void addItem(@Login User user, @RequestBody AddItem addItem) {
         itemService.add(user, addItem);
+    }
+
+    @DeleteMapping("/item/{item_id}/delete")
+    public void deleteItem(@Login User user, @PathVariable("item_id") Long itemId) {
+        itemService.delete(user, itemId);
     }
 }

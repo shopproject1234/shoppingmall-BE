@@ -31,6 +31,21 @@ public class Cart {
 
     private Integer count;
 
-    private Integer price;
+    private Integer price; // 아이템 1개의 가격
+
+    public static Cart add(User user, Item item, Integer count) {
+        Cart cart = new Cart();
+        cart.user = user;
+        cart.item = item;
+        cart.category = item.getCategory();
+        cart.date = LocalDateTime.now();
+        cart.count = count;
+        cart.price = item.getPrice();
+        return cart;
+    }
+
+    public void addCount(Integer count) {
+        this.count += count;
+    }
 
 }

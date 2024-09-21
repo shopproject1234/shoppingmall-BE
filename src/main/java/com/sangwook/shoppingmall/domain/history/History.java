@@ -1,6 +1,7 @@
 package com.sangwook.shoppingmall.domain.history;
 
 import com.sangwook.shoppingmall.constant.Category;
+import com.sangwook.shoppingmall.domain.cart.Cart;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.user.User;
 import jakarta.persistence.*;
@@ -31,15 +32,17 @@ public class History {
 
     private Integer count;
 
-    private Integer price;
+    private Integer totalPrice;
 
-    public History(User user, Item item, Category category, Integer count, Integer price) {
-        this.user = user;
-        this.item = item;
-        this.category = category;
-        this.count = count;
-        this.price = price;
-        this.date = LocalDateTime.now();
+    public static History purchased(Cart cart) {
+        History history = new History();
+        history.user = cart.getUser();
+        history.item = cart.getItem();
+        history.category = cart.getCategory();
+        history.count = cart.getCount();
+        history.totalPrice = cart.getPrice() * cart.getCount();
+        history.date = LocalDateTime.now();
+        return history;
     }
 
     public History() {

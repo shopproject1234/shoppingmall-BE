@@ -5,6 +5,7 @@ import com.sangwook.shoppingmall.constant.Preference;
 import com.sangwook.shoppingmall.domain.interest.Interest;
 import com.sangwook.shoppingmall.domain.interest.dto.InterestInfo;
 import com.sangwook.shoppingmall.domain.user.User;
+import com.sangwook.shoppingmall.domain.user.dto.PassCheck;
 import com.sangwook.shoppingmall.domain.user.dto.UserLogin;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
 import com.sangwook.shoppingmall.repository.InterestRepository;
@@ -72,6 +73,16 @@ public class UserService {
         return interests.stream().map(InterestInfo::new).toList();
     }
 
+    public Boolean checkPass(PassCheck passCheck, User getUser) {
+        User user = getUserByEmail(getUser.getEmail());
+        return passwordEncoder.matches(passCheck.getPassword(), user.getPassword());
+    }
+
+    public Boolean checkUserExist(String email) {
+        Optional<User> getUser = userRepository.findByEmail(email);
+        return getUser.isPresent();
+    }
+
     /**
      * private method
      */
@@ -90,8 +101,6 @@ public class UserService {
         }
         return getUser.get();
     }
-
-
 
 
 }

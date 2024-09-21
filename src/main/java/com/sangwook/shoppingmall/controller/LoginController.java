@@ -1,8 +1,10 @@
 package com.sangwook.shoppingmall.controller;
 
+import com.sangwook.shoppingmall.argumentResolver.Login;
 import com.sangwook.shoppingmall.constant.SessionConst;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
+import com.sangwook.shoppingmall.domain.user.dto.PassCheck;
 import com.sangwook.shoppingmall.domain.user.dto.UserLogin;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
 import com.sangwook.shoppingmall.service.EmailService;
@@ -42,11 +44,23 @@ public class LoginController {
 
     @PostMapping("/user/email/auth")
     public void sendEmail(@RequestBody EmailCheck check) {
+        if (userService.checkUserExist(check.getEmail())) {
+            //해당 유저가 이미 존재하는 경우
+            throw new IllegalStateException(); //FIXME
+        }
         emailService.sendMail(check.getEmail());
     }
 
+    @PostMapping("/user/pwCheck")
+    public void sendEmail(@RequestBody PassCheck check, @Login User user) {
+        Boolean checked = userService.checkPass(check, user);
+        if (checked) {
+            emailService.sendMail(user.getEmail());
+        }
+    }
+
     @PostMapping("/user/email/verify")
-    public Boolean verifyCode(@RequestBody EmailCheck check) {
+    public Boolean verifyCode(@RequestBody EmailCheck check) { //계정 생성 시, 비밀번호 변경 시 이메일체크를 담당
         return emailService.verifyCode(check);
     }
 }

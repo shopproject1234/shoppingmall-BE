@@ -47,7 +47,7 @@ public class ItemServiceTest {
     public void setUser() {
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         user = userService.register(userRegister);
     }
@@ -127,7 +127,7 @@ public class ItemServiceTest {
 
         UserRegister userRegister = new UserRegister("tkddnr123@naver.com",
                 "상욱2", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User user2 = userService.register(userRegister);
 

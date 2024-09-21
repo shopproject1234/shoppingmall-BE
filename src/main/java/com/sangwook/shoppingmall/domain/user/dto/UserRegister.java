@@ -20,17 +20,14 @@ public class UserRegister {
 
     private Integer birth;
 
-    private Integer age;
-
     private Gender gender;
 
-    public UserRegister(String email, String nickname, String password, String phoneNumber, Integer birth, Integer age, Gender gender) {
+    public UserRegister(String email, String nickname, String password, String phoneNumber, Integer birth, Gender gender) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.birth = birth;
-        this.age = age;
         this.gender = gender;
     }
 }

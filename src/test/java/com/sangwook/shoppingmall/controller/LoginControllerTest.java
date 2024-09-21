@@ -40,7 +40,7 @@ public class LoginControllerTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User saved = userService.register(userRegister);
 

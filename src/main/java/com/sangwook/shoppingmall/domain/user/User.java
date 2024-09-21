@@ -23,8 +23,6 @@ public class User {
 
     private String password;
 
-    private Integer age;
-
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -37,7 +35,6 @@ public class User {
         user.email = userRegister.getEmail();
         user.name = userRegister.getNickname();
         user.password = encoded;
-        user.age = userRegister.getAge();
         user.gender = userRegister.getGender();
         user.phoneNumber = userRegister.getPhoneNumber();
         user.birth = birthConverter(userRegister.getBirth());

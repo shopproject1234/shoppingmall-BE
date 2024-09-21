@@ -61,7 +61,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
 
         //when
@@ -72,7 +72,6 @@ class UserServiceTest {
         assertThat(saved.getEmail()).isEqualTo("tkddnr@naver.com");
         assertThat(saved.getName()).isEqualTo("상욱");
         assertThat(passwordEncoder.matches("123123", saved.getPassword())).isTrue();
-        assertThat(saved.getAge()).isEqualTo(13);
         assertThat(saved.getGender()).isEqualTo(Gender.MALE);
         assertThat(saved.getPhoneNumber()).isEqualTo("01011112222");
         assertThat(saved.getBirth()).isEqualTo(LocalDate.of(2012, 11, 22));
@@ -98,7 +97,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User saved = userService.register(userRegister);
 
@@ -117,7 +116,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User saved = userService.register(userRegister);
 
@@ -143,7 +142,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User saved = userService.register(userRegister);
 

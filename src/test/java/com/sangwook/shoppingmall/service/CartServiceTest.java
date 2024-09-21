@@ -45,7 +45,7 @@ public class CartServiceTest {
     public void set() {
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         user = userService.register(userRegister);
 
@@ -66,7 +66,7 @@ public class CartServiceTest {
         //given
         UserRegister userRegister = new UserRegister("taaaa@naver.com",
                 "상욱2", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User user = userService.register(userRegister);
 
@@ -89,7 +89,7 @@ public class CartServiceTest {
         //given
         UserRegister userRegister = new UserRegister("taaaa@naver.com",
                 "상욱2", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User user = userService.register(userRegister);
 
@@ -123,7 +123,7 @@ public class CartServiceTest {
         //given
         UserRegister userRegister = new UserRegister("taaaa@naver.com",
                 "상욱2", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User user = userService.register(userRegister);
 
@@ -150,7 +150,7 @@ public class CartServiceTest {
         //given
         UserRegister userRegister = new UserRegister("taaaa@naver.com",
                 "상욱2", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User user = userService.register(userRegister);
 
@@ -176,7 +176,7 @@ public class CartServiceTest {
         //given
         UserRegister userRegister = new UserRegister("taaaa@naver.com",
                 "상욱2", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User user = userService.register(userRegister);
 
@@ -198,7 +198,7 @@ public class CartServiceTest {
         //given
         UserRegister userRegister = new UserRegister("taaaa@naver.com",
                 "상욱2", "123123",
-                "01011112222", 20121122, 13,
+                "01011112222", 20121122,
                 Gender.MALE);
         User user = userService.register(userRegister);
 

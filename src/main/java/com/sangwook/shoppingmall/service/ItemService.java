@@ -54,7 +54,7 @@ public class ItemService {
     }
 
     public Page<ItemList> getList(int page, String sortType, String keyword, String category) {
-        PageRequest pageRequest = PageRequest.of(page, 10);
+        PageRequest pageRequest = PageRequest.of(page - 1, 10);
         return itemRepository.findAllBySortType(sortType, keyword, category, pageRequest);
     }
 

@@ -29,9 +29,9 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     @Override
     public Page<ItemList> findAllBySortType(String sortType, String keyword, String category, Pageable pageable) {
         List<ItemList> result = jpaQueryFactory.select(new QItemList(item.id, item.name, item.price, item.category, item.itemCount, item.time, user.id, user.name, itemImage.imageLink))
-                .from(item, user, itemImage)
-                .where(item.user.id.eq(user.id))
-                .where(itemImage.item.id.eq(item.id).and(itemImage.imageNumber.eq(1)))
+                .from(item)
+                .innerJoin(user).on(item.user.eq(user))
+                .innerJoin(itemImage).on(item.id.eq(itemImage.item.id).and(itemImage.imageNumber.eq(1)))
                 .where(categoryEq(category))
                 .where(keywordEq(keyword))
                 .orderBy(sortTypeEq(sortType))

@@ -3,9 +3,11 @@ package com.sangwook.shoppingmall.service;
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Preference;
 import com.sangwook.shoppingmall.domain.interest.Interest;
+import com.sangwook.shoppingmall.domain.interest.QInterest;
 import com.sangwook.shoppingmall.domain.interest.dto.InterestInfo;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.PassCheck;
+import com.sangwook.shoppingmall.domain.user.dto.UserInfo;
 import com.sangwook.shoppingmall.domain.user.dto.UserLogin;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
 import com.sangwook.shoppingmall.repository.InterestRepository;
@@ -16,8 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -71,6 +72,38 @@ public class UserService {
     public List<InterestInfo> getInterests(Long userId) {
         List<Interest> interests = interestRepository.findAllById(userId);
         return interests.stream().map(InterestInfo::new).toList();
+    }
+
+    /**
+     * 사용자 정보
+     */
+    public UserInfo getUserInfo(Long userId) {
+        User user = getUserById(userId);
+        List<Interest> interests = interestRepository.findAllById(userId);
+        List<Category> interested = new ArrayList<>(); //category를 담을 List
+        UserInfo info = new UserInfo();
+        info.setNickname(user.getName());
+
+        for (Interest interest : interests) {
+            if (interest.getScale().equals(Preference.INTERESTED)) {
+                interested.add(interest.getCategory());
+            }
+        }
+        info.setCategory(interested);
+        return info;
+    }
+
+    public void changeUserInfo(Long userId, UserInfo userInfo) {
+        User user = getUserById(userId);
+        List<Category> category = userInfo.getCategory();
+        List<Interest> interest = interestRepository.findAllById(userId);
+        for (Interest get : interest) {
+            if (category.contains(get.getCategory())) {
+                get.changeScale(Preference.INTERESTED);
+            } else {
+                interestRepository.save(Interest.interested(user, get.getCategory()));
+            }
+        }
     }
 
     public Boolean checkPass(PassCheck passCheck, User getUser) {

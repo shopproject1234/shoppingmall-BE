@@ -60,7 +60,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
 
     private BooleanExpression categoryEq(String category) {
         if (category != null) {
-            return item.category.eq(Category.valueOf(category));
+            return item.category.eq(Category.valueOf(category.toUpperCase()));
         }
         return null;
     }

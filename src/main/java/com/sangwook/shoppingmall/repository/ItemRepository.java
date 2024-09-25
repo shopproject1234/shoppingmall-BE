@@ -8,12 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface ItemRepository extends JpaRepository<Item, Long> {
+public interface ItemRepository extends JpaRepository<Item, Long>, CustomItemRepository{
 
-    @Query(
-            value = "select * from Item order by RAND() \n-- #pageable\n",
-            countQuery = "SELECT COUNT(*) FROM Item",
-            nativeQuery = true
-    )
-    Page<Item> findItemRandom(Pageable pageable);
 }

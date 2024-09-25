@@ -1,13 +1,18 @@
 package com.sangwook.shoppingmall.service;
 
+import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
 import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
+import com.sangwook.shoppingmall.domain.item.dto.ItemList;
 import com.sangwook.shoppingmall.domain.itemImage.ItemImage;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.repository.ImageRepository;
 import com.sangwook.shoppingmall.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +51,11 @@ public class ItemService {
         List<ItemImage> image = imageRepository.findByItemId(itemId);
 
         return new ItemInfo(item, item.getUser(), image);
+    }
+
+    public Page<ItemList> getList(int page, String sortType, String keyword, String category) {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        return itemRepository.findAllBySortType(sortType, keyword, category, pageRequest);
     }
 
     private Item getItem(Long itemId) {

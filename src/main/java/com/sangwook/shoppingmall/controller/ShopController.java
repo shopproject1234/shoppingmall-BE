@@ -1,16 +1,19 @@
 package com.sangwook.shoppingmall.controller;
 
 import com.sangwook.shoppingmall.argumentResolver.Login;
+import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.domain.cart.dto.AddCart;
 import com.sangwook.shoppingmall.domain.cart.dto.DeleteCart;
 import com.sangwook.shoppingmall.domain.cart.dto.MyCart;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
 import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
+import com.sangwook.shoppingmall.domain.item.dto.ItemList;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.service.CartService;
 import com.sangwook.shoppingmall.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +42,14 @@ public class ShopController {
     @GetMapping("/item/{item_id}/info")
     public ItemInfo itemInfo(@PathVariable("item_id") Long itemId) {
         return itemService.getInfo(itemId);
+    }
+
+    @GetMapping("/item/list")
+    public Page<ItemList> itemList(@RequestParam int page,
+                                   @RequestParam String sortType,
+                                   @RequestParam(required = false) String keyword,
+                                   @RequestParam(required = false) String category) {
+        return itemService.getList(page, sortType, keyword, category);
     }
 
     /**

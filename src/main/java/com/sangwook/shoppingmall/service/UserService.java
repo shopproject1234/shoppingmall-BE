@@ -37,7 +37,16 @@ public class UserService {
         }
         String encoded = passwordEncoder.encode(userRegister.getPassword());
         User user = User.register(userRegister, encoded);
-        return userRepository.save(user);
+        user = userRepository.save(user);
+
+        List<String> category = userRegister.getCategory();
+        if (category != null) {
+            for (String s : category) {
+                addInterest(user.getId(), Category.valueOf(s));
+            }
+        }
+
+        return user;
     }
 
     public User login(UserLogin userLogin) {
@@ -47,28 +56,10 @@ public class UserService {
         }
         return user;
     }
+
     /**
      * 관심사 INTEREST
      */
-    public Interest addInterest(Long userId, Category category) {
-        User user = getUserById(userId);
-        Optional<Interest> getInterest = interestRepository.findByUserIdAndCategory(userId, category);
-        if (getInterest.isEmpty()) {
-            Interest interest = Interest.interested(user, category);
-            return interestRepository.save(interest);
-        } else { //이미 해당 카테고리의 관심사가 있는 경우 Preference를 INTERESTED로 변경
-            Interest interest = getInterest.get();
-            return interest.changeScale(Preference.INTERESTED);
-        }
-    }
-
-    public void deleteInterest(Long userId, Category category) {
-        Interest interest = interestRepository.findByUserIdAndCategory(userId, category).get();
-        if (interest.getScale().equals(Preference.INTERESTED)) {
-            interestRepository.delete(interest);
-        }
-    }
-
     public List<InterestInfo> getInterests(Long userId) {
         List<Interest> interests = interestRepository.findAllById(userId);
         return interests.stream().map(InterestInfo::new).toList();
@@ -94,15 +85,35 @@ public class UserService {
     }
 
     public void changeUserInfo(Long userId, UserInfo userInfo) {
-        User user = getUserById(userId);
-        List<Category> category = userInfo.getCategory();
+        if (userInfo.getCategory() == null) {
+            deleteAllInterests(userId);
+            return;
+        }
+        List<Category> change = userInfo.getCategory();
+
         List<Interest> interest = interestRepository.findAllById(userId);
-        for (Interest get : interest) {
-            if (category.contains(get.getCategory())) {
-                get.changeScale(Preference.INTERESTED);
-            } else {
-                interestRepository.save(Interest.interested(user, get.getCategory()));
+        List<Category> exist = new ArrayList<>();
+        if (interest != null) {
+            for (Interest getInterest : interest) {
+                exist.add(getInterest.getCategory());
             }
+        }
+
+        //합집합
+        Set<Category> set = new HashSet<>();
+        set.addAll(change);
+        set.addAll(exist);
+
+        //차집합
+        change.forEach(set::remove);
+
+        for (Category category : change) {
+            //있으면 scale변경, 없으면 저장
+            addInterest(userId, category);
+        }
+
+        for (Category category : set) {
+            deleteInterest(userId, category);
         }
     }
 
@@ -135,5 +146,27 @@ public class UserService {
         return getUser.get();
     }
 
+    private void addInterest(Long userId, Category category) {
+        User user = getUserById(userId);
+        Optional<Interest> getInterest = interestRepository.findByUserIdAndCategory(userId, category);
+        if (getInterest.isEmpty()) {
+            Interest interest = Interest.interested(user, category);
+            interestRepository.save(interest);
+        } else { //이미 해당 카테고리의 관심사가 있는 경우 Preference를 INTERESTED로 변경
+            Interest interest = getInterest.get();
+            interest.changeScale(Preference.INTERESTED);
+        }
+    }
+
+    private void deleteInterest(Long userId, Category category) {
+        Interest interest = interestRepository.findByUserIdAndCategory(userId, category).get();
+        if (interest.getScale().equals(Preference.INTERESTED)) {
+            interestRepository.delete(interest);
+        }
+    }
+
+    private void deleteAllInterests(Long userId) {
+        interestRepository.deleteAllByUserIdAndScale(userId, Preference.INTERESTED);
+    }
 
 }

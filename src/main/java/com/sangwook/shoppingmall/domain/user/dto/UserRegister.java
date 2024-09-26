@@ -4,7 +4,7 @@ import com.sangwook.shoppingmall.constant.Gender;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +22,8 @@ public class UserRegister {
 
     private Gender gender;
 
+    private List<String> category;
+
     public UserRegister(String email, String nickname, String password, String phoneNumber, Integer birth, Gender gender) {
         this.email = email;
         this.nickname = nickname;
@@ -29,5 +31,15 @@ public class UserRegister {
         this.phoneNumber = phoneNumber;
         this.birth = birth;
         this.gender = gender;
+    }
+
+    public UserRegister(String email, String nickname, String password, String phoneNumber, Integer birth, Gender gender, List<String> categories) {
+        this.email = email;
+        this.nickname = nickname;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.birth = birth;
+        this.gender = gender;
+        this.category = categories;
     }
 }

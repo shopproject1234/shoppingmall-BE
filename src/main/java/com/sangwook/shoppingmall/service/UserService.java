@@ -3,7 +3,6 @@ package com.sangwook.shoppingmall.service;
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Preference;
 import com.sangwook.shoppingmall.domain.interest.Interest;
-import com.sangwook.shoppingmall.domain.interest.QInterest;
 import com.sangwook.shoppingmall.domain.interest.dto.InterestInfo;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.PassCheck;
@@ -99,7 +98,7 @@ public class UserService {
             }
         }
 
-        //합집합
+        //Set에 모두 넣고 변경사항 차집합하여 남는것들 삭제, change 객체에 있는 카테고리들은 저장
         Set<Category> set = new HashSet<>();
         set.addAll(change);
         set.addAll(exist);

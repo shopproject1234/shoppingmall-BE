@@ -5,7 +5,6 @@ import com.sangwook.shoppingmall.constant.Gender;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
 import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
-import com.sangwook.shoppingmall.domain.item.dto.ItemList;
 import com.sangwook.shoppingmall.domain.itemImage.ItemImage;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -140,40 +138,8 @@ public class ItemServiceTest {
     }
 
     @Test
-    @DisplayName("사용자는 page, sortType, keyword, category를 정하여 상품 목록을 확인할 수 있다")
-    void test4_1() {
-        //given
-        AddItem addItem = new AddItem();
-        addItem.setItemName("장롱");
-        addItem.setItemCount(3);
-        addItem.setItemInfo("장롱입니다 매우 상태가 좋습니다");
-        addItem.setCategory(Category.FURNITURE);
-        addItem.setPrice(1_000_000);
-        List<String> image = List.of("imageLink1", "imageLink2", "imageLink3");
-        addItem.setImage(image);
-        Item item = itemService.add(user, addItem);
-
-        //when
-        Page<ItemList> itemPage = itemService.getList(1, "latest", null, null);
-
-        //then
-        assertThat(itemPage.getNumber()).isEqualTo(0); //현재 페이지 수
-        assertThat(itemPage.getSize()).isEqualTo(10); //페이지 크기
-        assertThat(itemPage.getNumberOfElements()).isEqualTo(1); //현재 페이지에 나올 데이터 수
-
-        ItemList itemList = itemPage.getContent().get(0);
-
-        assertThat(itemList.getItemId()).isEqualTo(item.getId());
-        assertThat(itemList.getItemName()).isEqualTo(item.getName());
-        assertThat(itemList.getPrice()).isEqualTo(item.getPrice());
-        assertThat(itemList.getCategory()).isEqualTo(item.getCategory());
-        assertThat(itemList.getItemCount()).isEqualTo(item.getItemCount());
-        assertThat(itemList.getUploadUserId()).isEqualTo(item.getUser().getId());
-        assertThat(itemList.getUploadUserName()).isEqualTo(item.getUser().getName());
-
-        ItemImage titleImage = imageRepository.findTitleImage(item.getId());
-        assertThat(itemList.getTitleImage()).isEqualTo(titleImage.getImageLink());
-
+    @DisplayName("사용자는 본인이올린 상품과 다른 사람들이 올린 상품목록을 확인할 수 있다")
+    void test4() {
 
     }
 

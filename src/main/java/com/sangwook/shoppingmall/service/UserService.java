@@ -32,14 +32,14 @@ public class UserService {
 
     public User register(UserRegister userRegister) {
         Optional<User> getMember = userRepository.findByEmail(userRegister.getEmail());
-        if (getMember.isPresent()) {
+        if (getMember.isPresent()) { // 이미 해당 이메일을 가진 유저가 존재하는 경우
             throw new IllegalStateException();//FIXME
         }
         String encoded = passwordEncoder.encode(userRegister.getPassword());
-        User user = User.register(userRegister, encoded);
+        User user = User.register(userRegister, encoded); // 비밀번호 encoding하여 저장
         user = userRepository.save(user);
 
-        List<String> category = userRegister.getCategory();
+        List<String> category = userRegister.getCategory(); // 회원가입 시 카테고리도 요청오면 같이 저장
         if (category != null) {
             for (String s : category) {
                 addInterest(user.getId(), Category.valueOf(s));
@@ -51,18 +51,10 @@ public class UserService {
 
     public User login(UserLogin userLogin) {
         User user = getUserByEmail(userLogin.getEmail());
-        if (!passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) { // 요청온 비밀번호와 저장된 비밀번호가 다른경우
             throw new IllegalStateException();//FIXME
         }
         return user;
-    }
-
-    /**
-     * 관심사 INTEREST
-     */
-    public List<InterestInfo> getInterests(Long userId) {
-        List<Interest> interests = interestRepository.findAllById(userId);
-        return interests.stream().map(InterestInfo::new).toList();
     }
 
     /**
@@ -84,6 +76,9 @@ public class UserService {
         return info;
     }
 
+    /**
+     * 사용자가 구매한 카테고리라 관심사가 PURCHASED로 되어있는경우 -> addInterest()에서 처리
+     */
     public void changeUserInfo(Long userId, UserInfo userInfo) {
         if (userInfo.getCategory() == null) {
             deleteAllInterests(userId);

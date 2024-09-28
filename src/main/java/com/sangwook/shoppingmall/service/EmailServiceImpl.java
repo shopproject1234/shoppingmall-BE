@@ -37,8 +37,8 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public Boolean verifyCode(EmailCheck check) {
-        if (redisService.getCode(check.getEmail()).equals(check.getCode())) {
-            redisService.verified(check.getEmail());
+        if (redisService.getCode(check.getEmail()).equals(check.getCode())) { // getCode에서 값이 없을경우 -1 반환됨
+            redisService.verified(check.getEmail()); // 인증 될경우 코드 1로 변경됨
             return true;
         }
         return false;
@@ -46,7 +46,7 @@ public class EmailServiceImpl implements EmailService{
 
     private MimeMessage createMail(String email, int code) {
 
-        saveEmailCode(email, code);
+        saveEmailCode(email, code); //유지 시간 10분으로 redis 저장소에 email, code를 key value값으로 저장
 
         MimeMessage message = javaMailSender.createMimeMessage();
         try {

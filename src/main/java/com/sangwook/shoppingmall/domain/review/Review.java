@@ -30,12 +30,14 @@ public class Review {
 
     private LocalDateTime time;
 
-    public Review(User user, Item item, ReviewWrite reviewWrite) {
-        this.user = user;
-        this.item = item;
-        this.content = reviewWrite.getContent();
-        this.score = reviewWrite.getScore();
-        this.time = LocalDateTime.now();
+    public static Review write(User user, Item item, ReviewWrite reviewWrite) {
+        Review review = new Review();
+        review.user = user;
+        review.item = item;
+        review.content = reviewWrite.getContent();
+        review.score = reviewWrite.getScore();
+        review.time = LocalDateTime.now();
+        return review;
     }
 
     public Review() {

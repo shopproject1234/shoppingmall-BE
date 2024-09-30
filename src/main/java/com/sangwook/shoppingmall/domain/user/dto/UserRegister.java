@@ -42,4 +42,7 @@ public class UserRegister {
         this.gender = gender;
         this.category = categories;
     }
+
+    public UserRegister() {
+    }
 }

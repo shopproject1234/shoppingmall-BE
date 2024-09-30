@@ -40,6 +40,13 @@ public class Review {
         return review;
     }
 
+    public Review update(ReviewWrite reviewWrite) {
+        this.content = reviewWrite.getContent();
+        this.score = reviewWrite.getScore();
+        this.time = LocalDateTime.now();
+        return this;
+    }
+
     public Review() {
 
     }

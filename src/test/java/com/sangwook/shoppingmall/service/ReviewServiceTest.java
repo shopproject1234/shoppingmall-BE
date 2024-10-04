@@ -6,6 +6,7 @@ import com.sangwook.shoppingmall.domain.cart.dto.AddCart;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
 import com.sangwook.shoppingmall.domain.review.Review;
+import com.sangwook.shoppingmall.domain.review.dto.ReviewList;
 import com.sangwook.shoppingmall.domain.review.dto.ReviewWrite;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,6 +108,30 @@ public class ReviewServiceTest {
     @Test
     @DisplayName("사용자는 상품에 대한 리뷰목록을 확인할 수 있다")
     void test2() {
+        //given
+        ReviewWrite reviewWrite = new ReviewWrite();
+        reviewWrite.setContent("상태가 좋군요");
+        reviewWrite.setScore(4.5f);
+
+        AddCart addCart = new AddCart();
+        addCart.setItemId(item.getId());
+        addCart.setItemCount(3);
+        cartService.add(newUser.getId(), addCart);
+
+        cartService.order(newUser.getId());
+
+        Review review = reviewService.reviewWrite(newUser.getId(), item.getId(), reviewWrite);
+
+        //when
+        Page<ReviewList> getList = reviewService.findReview(item.getId(), 1);
+
+        //then
+        assertThat(getList.getNumberOfElements()).isEqualTo(1);
+        assertThat(getList.getContent().get(0).getReviewId()).isEqualTo(review.getId());
+        assertThat(getList.getContent().get(0).getContent()).isEqualTo("상태가 좋군요");
+        assertThat(getList.getContent().get(0).getUserId()).isEqualTo(newUser.getId());
+        assertThat(getList.getContent().get(0).getUsername()).isEqualTo(newUser.getName());
+        assertThat(getList.getContent().get(0).getScore()).isEqualTo(4.5f);
 
     }
 

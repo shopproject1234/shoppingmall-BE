@@ -1,22 +1,25 @@
 package com.sangwook.shoppingmall.service;
 
-import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
 import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.domain.item.dto.ItemList;
 import com.sangwook.shoppingmall.domain.itemImage.ItemImage;
 import com.sangwook.shoppingmall.domain.user.User;
+import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
+import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.repository.ImageRepository;
 import com.sangwook.shoppingmall.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
+import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Service
 @RequiredArgsConstructor
@@ -38,12 +41,9 @@ public class ItemService {
 
     public void delete(User user, Long itemId) {
         Item item = getItem(itemId);
-        if (checkMine(user, item)) {
-            itemRepository.delete(item);
-            imageRepository.deleteAllByItemId(itemId);
-            return;
-        }
-        throw new IllegalStateException(); //FIXME
+        checkMine(user, item);
+        itemRepository.delete(item);
+        imageRepository.deleteAllByItemId(itemId);
     }
 
     public ItemInfo getInfo(Long itemId) {
@@ -59,10 +59,16 @@ public class ItemService {
     }
 
     private Item getItem(Long itemId) {
-        return itemRepository.findById(itemId).get();
+        Optional<Item> item = itemRepository.findById(itemId);
+        if (item.isEmpty()) {
+            throw new ObjectNotFoundException(getMethodName());
+        }
+        return item.get();
     }
 
-    private Boolean checkMine(User user, Item item) {
-        return item.getUser().equals(user);
+    private void checkMine(User user, Item item) {
+        if (!item.getUser().equals(user)) {
+            throw new UserValidationException(getMethodName());
+        }
     }
 }

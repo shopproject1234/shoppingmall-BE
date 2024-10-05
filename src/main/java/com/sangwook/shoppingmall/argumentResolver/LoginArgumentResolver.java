@@ -2,6 +2,8 @@ package com.sangwook.shoppingmall.argumentResolver;
 
 import com.sangwook.shoppingmall.constant.SessionConst;
 import com.sangwook.shoppingmall.domain.user.User;
+import com.sangwook.shoppingmall.exception.MethodFunction;
+import com.sangwook.shoppingmall.exception.custom.SessionNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +13,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
+
 @Slf4j
 public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        log.info("supportsParameter 실행");
         boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
         boolean hasMemberType = User.class.isAssignableFrom(parameter.getParameterType());
 
@@ -24,12 +27,10 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        log.info("resolveArgument 실행");
-
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         HttpSession session = request.getSession(false);
         if (session == null) {
-            return null;
+            throw new SessionNotFoundException("세션이 만료되었거나 로그인 하지 않았습니다", getMethodName());
         }
 
         return session.getAttribute(SessionConst.LOGIN_USER);

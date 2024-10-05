@@ -10,6 +10,8 @@ import com.sangwook.shoppingmall.domain.user.dto.PassCheck;
 import com.sangwook.shoppingmall.domain.user.dto.UserInfo;
 import com.sangwook.shoppingmall.domain.user.dto.UserLogin;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
+import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
+import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.repository.InterestRepository;
 import com.sangwook.shoppingmall.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
+import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Service
 @Transactional
@@ -33,7 +37,7 @@ public class UserService {
     public User register(UserRegister userRegister) {
         Optional<User> getMember = userRepository.findByEmail(userRegister.getEmail());
         if (getMember.isPresent()) { // 이미 해당 이메일을 가진 유저가 존재하는 경우
-            throw new IllegalStateException();//FIXME
+            throw new UserValidationException("해당 이메일의 유저는 이미 존재합니다", getMethodName());
         }
         String encoded = passwordEncoder.encode(userRegister.getPassword());
         User user = User.register(userRegister, encoded); // 비밀번호 encoding하여 저장
@@ -52,7 +56,7 @@ public class UserService {
     public User login(UserLogin userLogin) {
         User user = getUserByEmail(userLogin.getEmail());
         if (!passwordEncoder.matches(userLogin.getPassword(), user.getPassword())) { // 요청온 비밀번호와 저장된 비밀번호가 다른경우
-            throw new IllegalStateException();//FIXME
+            throw new UserValidationException("비밀번호가 잘못되었습니다", getMethodName());
         }
         return user;
     }
@@ -128,7 +132,7 @@ public class UserService {
     private User getUserByEmail(String email) {
         Optional<User> getUser = userRepository.findByEmail(email);
         if (getUser.isEmpty()) {
-            throw new IllegalStateException(); //FIXME
+            throw new ObjectNotFoundException(getMethodName());
         }
         return getUser.get();
     }
@@ -136,7 +140,7 @@ public class UserService {
     private User getUserById(Long id) {
         Optional<User> getUser = userRepository.findById(id);
         if (getUser.isEmpty()) {
-            throw new IllegalStateException(); //FIXME
+            throw new ObjectNotFoundException(getMethodName());
         }
         return getUser.get();
     }
@@ -154,9 +158,14 @@ public class UserService {
     }
 
     private void deleteInterest(Long userId, Category category) {
-        Interest interest = interestRepository.findByUserIdAndCategory(userId, category).get();
-        if (interest.getScale().equals(Preference.INTERESTED)) {
-            interestRepository.delete(interest);
+        Optional<Interest> interest = interestRepository.findByUserIdAndCategory(userId, category);
+        if (interest.isEmpty()) {
+            throw new ObjectNotFoundException(getMethodName());
+        }
+
+        Interest getInterest = interest.get();
+        if (getInterest.getScale().equals(Preference.INTERESTED)) {
+            interestRepository.delete(getInterest);
         }
     }
 

@@ -6,6 +6,8 @@ import com.sangwook.shoppingmall.domain.review.dto.ReviewList;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.review.Review;
 import com.sangwook.shoppingmall.domain.review.dto.ReviewWrite;
+import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
+import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.repository.HistoryRepository;
 import com.sangwook.shoppingmall.repository.ItemRepository;
 import com.sangwook.shoppingmall.repository.UserRepository;
@@ -19,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -31,9 +35,7 @@ public class ReviewService {
 
     public Review reviewWrite(Long userId, Long itemId, ReviewWrite reviewWrite) {
         // 유저와 아이템을 바탕으로 구매 이력 조회
-        if (!isPurchased(userId, itemId)) { // 구매하지 않은 상품이라면 예외처리
-            throw new IllegalStateException(); //FIXME
-        }
+        isPurchased(userId, itemId);
 
         User user = getUser(userId);
         Item item = getItem(itemId);
@@ -45,17 +47,13 @@ public class ReviewService {
 
     public Review updateReview(User user, Long reviewId, ReviewWrite reviewWrite) {
         Review review = getReview(reviewId);
-        if (!user.equals(review.getUser())) { // 요청한 유저와 리뷰를 작성한 유저가 다른 경우
-            throw new IllegalStateException(); //FIXME
-        }
+        checkMine(user, review);
         return review.update(reviewWrite);
     }
 
     public void deleteReview(User user, Long reviewId) {
         Review review = getReview(reviewId);
-        if (!user.equals(review.getUser())) { // 요청한 유저와 리뷰를 작성한 유저가 다른 경우
-            throw new IllegalStateException(); //FIXME
-        }
+        checkMine(user, review);
         reviewRepository.delete(review);
     }
 
@@ -71,7 +69,7 @@ public class ReviewService {
     private User getUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
-            throw new IllegalStateException(); //FIXME
+            throw new ObjectNotFoundException(getMethodName());
         }
         return user.get();
     }
@@ -79,7 +77,7 @@ public class ReviewService {
     private Item getItem(Long itemId) {
         Optional<Item> item = itemRepository.findById(itemId);
         if (item.isEmpty()) {
-            throw new IllegalStateException(); //FIXME
+            throw new ObjectNotFoundException(getMethodName());
         }
         return item.get();
     }
@@ -87,13 +85,21 @@ public class ReviewService {
     private Review getReview(Long reviewId) {
         Optional<Review> review = reviewRepository.findById(reviewId);
         if (review.isEmpty()) {
-            throw new IllegalStateException(); //FIXME
+            throw new ObjectNotFoundException(getMethodName());
         }
         return review.get();
     }
 
-    private Boolean isPurchased(Long userId, Long itemId) {
+    private void isPurchased(Long userId, Long itemId) {
         Optional<History> history = historyRepository.findByUserIdAndItemId(userId, itemId);
-        return history.isPresent();
+        if (history.isEmpty()) {
+            throw new ObjectNotFoundException("구매 되지 않은 상품에는 리뷰를 작성할 수 없습니다", getMethodName());
+        }
+    }
+
+    private void checkMine(User user, Review review) {
+        if (!user.equals(review.getUser())) { // 요청한 유저와 리뷰를 작성한 유저가 다른 경우
+            throw new UserValidationException(getMethodName());
+        }
     }
 }

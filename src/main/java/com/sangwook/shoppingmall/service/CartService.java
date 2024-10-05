@@ -7,6 +7,8 @@ import com.sangwook.shoppingmall.domain.cart.dto.MyCart;
 import com.sangwook.shoppingmall.domain.history.History;
 import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.user.User;
+import com.sangwook.shoppingmall.exception.custom.MyItemException;
+import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.repository.CartRepository;
 import com.sangwook.shoppingmall.repository.HistoryRepository;
 import com.sangwook.shoppingmall.repository.ItemRepository;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Transactional
 @Service
@@ -35,7 +39,7 @@ public class CartService {
         Item item = getItem(addCart.getItemId());
 
         if (user.equals(item.getUser())) {
-            throw new IllegalStateException(); //FIXME
+            throw new MyItemException("본인의 상품은 카트에 추가할 수 없습니다", getMethodName());
         }
 
         Optional<Cart> cart = getCart(userId, addCart.getItemId());
@@ -75,11 +79,19 @@ public class CartService {
      *  private Method
      */
     private User getUser(Long userId) {
-        return userRepository.findById(userId).get();
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new ObjectNotFoundException(getMethodName());
+        }
+        return user.get();
     }
 
     private Item getItem(Long itemId) {
-        return itemRepository.findById(itemId).get();
+        Optional<Item> item = itemRepository.findById(itemId);
+        if (item.isEmpty()) {
+            throw new ObjectNotFoundException(getMethodName());
+        }
+        return item.get();
     }
 
     private Optional<Cart> getCart(Long userId, Long itemId) {

@@ -1,6 +1,8 @@
 package com.sangwook.shoppingmall.service;
 
 import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
+import com.sangwook.shoppingmall.exception.custom.EmailSendException;
+import com.sangwook.shoppingmall.exception.custom.MyItemException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+
+import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Service
 @Transactional
@@ -57,7 +61,8 @@ public class EmailServiceImpl implements EmailService{
             String body = "Authentication Code : " + code;
             message.setText(body);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            //MessageException은 checkedException이므로 잡아서 Runtime으로 처리
+            throw new EmailSendException("이메일 전송중 오류 : " + e.getMessage(), getMethodName());
         }
         return message;
     }

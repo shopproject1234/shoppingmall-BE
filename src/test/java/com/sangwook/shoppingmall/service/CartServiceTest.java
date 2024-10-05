@@ -11,6 +11,7 @@ import com.sangwook.shoppingmall.domain.item.Item;
 import com.sangwook.shoppingmall.domain.item.dto.AddItem;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
+import com.sangwook.shoppingmall.exception.custom.MyItemException;
 import com.sangwook.shoppingmall.repository.CartRepository;
 import com.sangwook.shoppingmall.repository.HistoryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -114,7 +115,7 @@ public class CartServiceTest {
         addCart.setItemId(item.getId());
         addCart.setItemCount(3);
 
-        assertThatThrownBy(() -> cartService.add(user.getId(), addCart)).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> cartService.add(user.getId(), addCart)).isInstanceOf(MyItemException.class);
     }
 
     @Test

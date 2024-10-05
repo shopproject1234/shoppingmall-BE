@@ -9,6 +9,7 @@ import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
 import com.sangwook.shoppingmall.domain.user.dto.UserInfo;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
+import com.sangwook.shoppingmall.exception.custom.EmailSendException;
 import com.sangwook.shoppingmall.repository.InterestRepository;
 import com.sangwook.shoppingmall.service.fake.FakeEmailService;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -106,6 +108,12 @@ class UserServiceTest {
 
         assertThat(categories.contains(Category.FABRIC)).isTrue();
         assertThat(categories.contains(Category.FURNITURE)).isTrue();
+    }
+
+    @Test
+    @DisplayName("이메일 발송 MessagingException 테스트 : 커스텀 런타임 예외인 EmailSendException으로 변환")
+    void test1_4() {
+        assertThatThrownBy(() -> fakeEmailService.exceptionTest()).isInstanceOf(EmailSendException.class);
     }
 
     @Test

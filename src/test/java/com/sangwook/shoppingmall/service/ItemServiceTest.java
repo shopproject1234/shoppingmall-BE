@@ -8,6 +8,7 @@ import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.domain.itemImage.ItemImage;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
+import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.repository.ImageRepository;
 import com.sangwook.shoppingmall.repository.ItemRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -134,7 +135,7 @@ public class ItemServiceTest {
         //when
 
         //then
-        assertThatThrownBy(() -> itemService.delete(user2, item.getId())).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> itemService.delete(user2, item.getId())).isInstanceOf(UserValidationException.class);
     }
 
     @Test

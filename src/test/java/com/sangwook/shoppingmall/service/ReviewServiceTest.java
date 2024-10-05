@@ -10,6 +10,7 @@ import com.sangwook.shoppingmall.domain.review.dto.ReviewList;
 import com.sangwook.shoppingmall.domain.review.dto.ReviewWrite;
 import com.sangwook.shoppingmall.domain.user.User;
 import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
+import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.repository.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -102,7 +103,7 @@ public class ReviewServiceTest {
         reviewWrite.setScore(4.5f);
 
         //then
-        assertThatThrownBy(() -> reviewService.reviewWrite(newUser.getId(), item.getId(), reviewWrite)).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> reviewService.reviewWrite(newUser.getId(), item.getId(), reviewWrite)).isInstanceOf(ObjectNotFoundException.class);
     }
 
     @Test

@@ -11,6 +11,7 @@ import com.sangwook.shoppingmall.service.EmailService;
 import com.sangwook.shoppingmall.service.RedisService;
 import com.sangwook.shoppingmall.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,12 @@ public class LoginController {
         User user = userService.login(userLogin);
         request.getSession().setAttribute(SessionConst.LOGIN_USER, user);
         return "ok";
+    }
+
+    @PostMapping("/user/logout")
+    public void logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        session.invalidate();
     }
 
     @PostMapping("/user/email/auth")

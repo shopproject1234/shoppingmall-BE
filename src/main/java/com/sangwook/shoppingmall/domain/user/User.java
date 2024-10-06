@@ -45,11 +45,10 @@ public class User {
 
     }
 
-    private static LocalDate birthConverter(Integer intBirth) {
-        String stringBirth = intBirth.toString();
-        int year = Integer.parseInt(stringBirth.substring(0, 4));
-        int month = Integer.parseInt(stringBirth.substring(4, 6));
-        int day = Integer.parseInt(stringBirth.substring(6));
+    private static LocalDate birthConverter(String birth) {
+        int year = Integer.parseInt(birth.substring(0, 4));
+        int month = Integer.parseInt(birth.substring(5, 7));
+        int day = Integer.parseInt(birth.substring(8));
 
         return LocalDate.of(year, month, day);
     }

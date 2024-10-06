@@ -23,7 +23,7 @@ public class UserInitializer {
     public CommandLineRunner init() {
         return args -> {
             if (userRepository.findByEmail("tkddnr@naver.com").isEmpty()) {
-                UserRegister userRegister = new UserRegister("tkddnr@naver.com", "상욱", "123123", "01011112222", 20120111, Gender.MALE);
+                UserRegister userRegister = new UserRegister("tkddnr@naver.com", "상욱", "123123", "01011112222", "2000-09-14", Gender.MALE);
                 String encoded = passwordEncoder.encode(userRegister.getPassword());
 
                 User user = User.register(userRegister, encoded);

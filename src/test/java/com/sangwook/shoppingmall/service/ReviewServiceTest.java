@@ -47,7 +47,7 @@ public class ReviewServiceTest {
     void set() {
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122,
+                "01011112222", "2012-11-22",
                 Gender.MALE);
         user = userService.register(userRegister);
 
@@ -63,7 +63,7 @@ public class ReviewServiceTest {
 
         UserRegister newRegister = new UserRegister("tkddnr123@naver.com",
                 "쌍욱", "123123",
-                "01033333333", 20121122,
+                "01033333333", "2012-11-22",
                 Gender.MALE);
         newUser = userService.register(newRegister);
     }

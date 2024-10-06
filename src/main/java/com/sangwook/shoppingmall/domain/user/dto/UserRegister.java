@@ -18,13 +18,13 @@ public class UserRegister {
 
     private String phoneNumber;
 
-    private Integer birth;
+    private String birth;
 
     private Gender gender;
 
     private List<String> category;
 
-    public UserRegister(String email, String nickname, String password, String phoneNumber, Integer birth, Gender gender) {
+    public UserRegister(String email, String nickname, String password, String phoneNumber, String birth, Gender gender) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
@@ -33,7 +33,7 @@ public class UserRegister {
         this.gender = gender;
     }
 
-    public UserRegister(String email, String nickname, String password, String phoneNumber, Integer birth, Gender gender, List<String> categories) {
+    public UserRegister(String email, String nickname, String password, String phoneNumber, String birth, Gender gender, List<String> categories) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;

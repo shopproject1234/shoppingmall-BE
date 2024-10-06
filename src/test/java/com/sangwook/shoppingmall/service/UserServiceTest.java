@@ -68,7 +68,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122,
+                "01011112222", "2012-11-22",
                 Gender.MALE);
 
         //when
@@ -91,7 +91,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122,
+                "01011112222", "2012-11-22",
                 Gender.MALE,  List.of("FURNITURE", "FABRIC"));
 
         //when
@@ -138,7 +138,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122,
+                "01011112222", "2012-11-22",
                 Gender.MALE,  List.of("FURNITURE", "FABRIC"));
         User saved = userService.register(userRegister);
 
@@ -160,7 +160,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122,
+                "01011112222", "2012-11-22",
                 Gender.MALE);
         User saved = userService.register(userRegister);
 
@@ -186,7 +186,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122,
+                "01011112222", "2012-11-22",
                 Gender.MALE,  List.of("FURNITURE", "FABRIC"));
         User saved = userService.register(userRegister);
 
@@ -209,7 +209,7 @@ class UserServiceTest {
         //given
         UserRegister userRegister = new UserRegister("tkddnr@naver.com",
                 "상욱", "123123",
-                "01011112222", 20121122,
+                "01011112222", "2012-11-22",
                 Gender.MALE,  List.of("FURNITURE", "FABRIC"));
         User saved = userService.register(userRegister);
 

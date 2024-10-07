@@ -24,6 +24,7 @@ public class RedisService {
         redisTemplate.delete(email);
     }
 
+    //code가 있을 경우 code 반환, 없을 경우 -1 반환
     public Integer getCode(String email) {
         ValueOperations<String, Integer> values = redisTemplate.opsForValue();
         if (values.get(email) == null) {
@@ -32,6 +33,7 @@ public class RedisService {
         return values.get(email);
     }
 
+    //인증이 된 경우 code 값을 1로 변경
     public void verified(String email) {
         ValueOperations<String, Integer> values = redisTemplate.opsForValue();
         values.getAndSet(email, 1);

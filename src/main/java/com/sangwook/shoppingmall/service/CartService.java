@@ -45,7 +45,7 @@ public class CartService {
         Optional<Cart> cart = getCart(userId, addCart.getItemId());
         if (cart.isPresent()) { //이미 장바구니에 해당 상품이 존재할 경우 카운트를 늘려줌
             Cart getCart = cart.get();
-            getCart.addCount(addCart.getItemCount());
+            getCart.addCount(addCart.getItemCount()); //TODO 해당 상품의 수량 확인 후 원하는 수량보다 적을 경우 Exception 추가 필요
             return getCart;
         }
         Cart newCart = Cart.add(user, item, addCart.getItemCount());
@@ -57,7 +57,8 @@ public class CartService {
         cart.ifPresent(cartRepository::delete);
     }
 
-    public List<MyCart> getMyCart(Long userId) {
+
+    public List<MyCart> getMyCart(Long userId) { //TODO N+1 문제 발생 가능성 있음 - 테스트 필요
         List<Cart> carts = cartRepository.findAllByUserId(userId);
         List<MyCart> myCart = new ArrayList<>();
         for (Cart cart : carts) {
@@ -66,7 +67,7 @@ public class CartService {
         return myCart;
     }
 
-    public void order(Long userId) {
+    public void order(Long userId) { //FIXME order메서드에서 주문시 item의 수량 줄여야함 N+1 문제 조심
         List<Cart> carts = cartRepository.findAllByUserId(userId);
         for (Cart cart : carts) {
             History history = History.purchased(cart);

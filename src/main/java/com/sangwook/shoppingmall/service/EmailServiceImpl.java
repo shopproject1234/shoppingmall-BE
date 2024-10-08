@@ -2,7 +2,6 @@ package com.sangwook.shoppingmall.service;
 
 import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
 import com.sangwook.shoppingmall.exception.custom.EmailSendException;
-import com.sangwook.shoppingmall.exception.custom.MyItemException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +69,6 @@ public class EmailServiceImpl implements EmailService{
     private void saveEmailCode(String email, Integer code) {
         //이미 Redis에 해당 이메일을 Key로 하는 데이터가 있을 경우 지우고 새로 생성
         Integer getCode = redisService.getCode(email);
-        log.info("code={}", getCode);
         if (getCode.equals(-1)) {
             redisService.setValues(email, code, Duration.ofMinutes(10));
         } else {

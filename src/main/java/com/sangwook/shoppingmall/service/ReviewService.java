@@ -93,7 +93,7 @@ public class ReviewService {
     private void isPurchased(Long userId, Long itemId) {
         Optional<History> history = historyRepository.findByUserIdAndItemId(userId, itemId);
         if (history.isEmpty()) {
-            throw new ObjectNotFoundException("구매 되지 않은 상품에는 리뷰를 작성할 수 없습니다", getMethodName());
+            throw new ObjectNotFoundException("구매 하지 않은 상품에는 리뷰를 작성할 수 없습니다", getMethodName());
         }
     }
 

@@ -1,9 +1,6 @@
 package com.sangwook.shoppingmall.exception;
 
-import com.sangwook.shoppingmall.exception.custom.EmailSendException;
-import com.sangwook.shoppingmall.exception.custom.MyItemException;
-import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
-import com.sangwook.shoppingmall.exception.custom.SessionNotFoundException;
+import com.sangwook.shoppingmall.exception.custom.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,11 +13,10 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
      * ExceptionHandler 추가 방법
      * 각각의 커스텀한 런타임예외에는 method라는 필드가 필요 -> 문제가 발생한 부분의 메서드를 ErrorResponse에 같이 출력하기 위함
      *
-     * @ExceptionHandler(XXX.class)
-     * public ResponseEntity<ErrorResponse> handleXXXException(XXXException e) {
-     *      String method = e.getMethod();
-     *      ErrorResponse error = ErrorResponse.error(e, method);
-     *      return ResponseEntity.status(xxx).body(error);
+     * @ExceptionHandler(XXX.class) public ResponseEntity<ErrorResponse> handleXXXException(XXXException e) {
+     * String method = e.getMethod();
+     * ErrorResponse error = ErrorResponse.error(e, method);
+     * return ResponseEntity.status(xxx).body(error);
      * }
      */
 
@@ -51,4 +47,12 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse error = ErrorResponse.error(e, method);
         return ResponseEntity.status(500).body(error);
     }
+
+    @ExceptionHandler(UserValidationException.class)
+    public ResponseEntity<ErrorResponse> handleUserValidationException(UserValidationException e) {
+        String method = e.getMethod();
+        ErrorResponse error = ErrorResponse.error(e, method);
+        return ResponseEntity.status(400).body(error);
+    }
+
 }

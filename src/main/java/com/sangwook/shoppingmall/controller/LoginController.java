@@ -3,10 +3,7 @@ package com.sangwook.shoppingmall.controller;
 import com.sangwook.shoppingmall.argumentResolver.Login;
 import com.sangwook.shoppingmall.constant.SessionConst;
 import com.sangwook.shoppingmall.domain.user.User;
-import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
-import com.sangwook.shoppingmall.domain.user.dto.PassCheck;
-import com.sangwook.shoppingmall.domain.user.dto.UserLogin;
-import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
+import com.sangwook.shoppingmall.domain.user.dto.*;
 import com.sangwook.shoppingmall.service.EmailService;
 import com.sangwook.shoppingmall.service.RedisService;
 import com.sangwook.shoppingmall.service.UserService;
@@ -37,10 +34,10 @@ public class LoginController {
     }
 
     @PostMapping("/user/login")
-    public String login(@RequestBody UserLogin userLogin, HttpServletRequest request) {
+    public LoginResponse login(@RequestBody UserLogin userLogin, HttpServletRequest request) {
         User user = userService.login(userLogin);
         request.getSession().setAttribute(SessionConst.LOGIN_USER, user);
-        return "ok";
+        return new LoginResponse(user.getId(), user.getName());
     }
 
     @PostMapping("/user/logout")

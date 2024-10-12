@@ -33,6 +33,9 @@ public class ItemService {
         Item item = Item.add(addItem, user);
         item = itemRepository.save(item);
 
+        if (addItem.getImage().isEmpty()) {
+            return item;
+        }
         List<String> image = addItem.getImage();
         List<ItemImage> images = ItemImage.addImage(image, item);
         imageRepository.saveAll(images);

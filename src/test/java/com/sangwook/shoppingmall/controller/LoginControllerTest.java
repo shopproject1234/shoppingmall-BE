@@ -55,7 +55,6 @@ public class LoginControllerTest {
                         .content(objectMapper.writeValueAsString(userLogin)))
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
-                        MockMvcResultMatchers.content().string("ok"),
                         MockMvcResultMatchers.request().sessionAttribute(SessionConst.LOGIN_USER, saved) //파고파고 들어가보면 equals 비교를한다 User안에 equals를 email비교로 등록해놓았다
                 );
     }

@@ -1,6 +1,6 @@
 package com.sangwook.shoppingmall.service;
 
-import com.sangwook.shoppingmall.domain.user.dto.EmailCheck;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.EmailCheck;
 
 public interface EmailService {
 

@@ -2,7 +2,7 @@ package com.sangwook.shoppingmall.repository;
 
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Preference;
-import com.sangwook.shoppingmall.domain.interest.Interest;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.Interest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

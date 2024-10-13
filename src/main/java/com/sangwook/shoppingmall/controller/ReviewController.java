@@ -1,11 +1,11 @@
 package com.sangwook.shoppingmall.controller;
 
 import com.sangwook.shoppingmall.argumentResolver.Login;
-import com.sangwook.shoppingmall.domain.review.Review;
-import com.sangwook.shoppingmall.domain.review.dto.ReviewList;
-import com.sangwook.shoppingmall.domain.review.dto.ReviewWrite;
-import com.sangwook.shoppingmall.domain.user.User;
-import com.sangwook.shoppingmall.service.ReviewService;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Review;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.ReviewList;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.ReviewWrite;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.application.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;

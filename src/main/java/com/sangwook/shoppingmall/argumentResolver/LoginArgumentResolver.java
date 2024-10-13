@@ -1,8 +1,7 @@
 package com.sangwook.shoppingmall.argumentResolver;
 
 import com.sangwook.shoppingmall.constant.SessionConst;
-import com.sangwook.shoppingmall.domain.user.User;
-import com.sangwook.shoppingmall.exception.MethodFunction;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.exception.custom.SessionNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

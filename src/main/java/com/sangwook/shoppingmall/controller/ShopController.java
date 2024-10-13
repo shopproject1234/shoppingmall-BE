@@ -1,16 +1,15 @@
 package com.sangwook.shoppingmall.controller;
 
 import com.sangwook.shoppingmall.argumentResolver.Login;
-import com.sangwook.shoppingmall.constant.Category;
-import com.sangwook.shoppingmall.domain.cart.dto.AddCart;
-import com.sangwook.shoppingmall.domain.cart.dto.DeleteCart;
-import com.sangwook.shoppingmall.domain.cart.dto.MyCart;
-import com.sangwook.shoppingmall.domain.item.dto.AddItem;
-import com.sangwook.shoppingmall.domain.item.dto.ItemInfo;
-import com.sangwook.shoppingmall.domain.item.dto.ItemList;
-import com.sangwook.shoppingmall.domain.user.User;
-import com.sangwook.shoppingmall.service.CartService;
-import com.sangwook.shoppingmall.service.ItemService;
+import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.dto.AddCart;
+import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.dto.DeleteCart;
+import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.dto.MyCart;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.AddItem;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemInfo;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemList;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.entity.cartaggregate.cart.application.CartService;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.application.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

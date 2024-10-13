@@ -1,6 +1,6 @@
 package com.sangwook.shoppingmall.repository;
 
-import com.sangwook.shoppingmall.domain.item.dto.ItemList;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

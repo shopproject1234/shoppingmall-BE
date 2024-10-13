@@ -1,8 +1,8 @@
 package com.sangwook.shoppingmall.config;
 
 import com.sangwook.shoppingmall.constant.Gender;
-import com.sangwook.shoppingmall.domain.user.User;
-import com.sangwook.shoppingmall.domain.user.dto.UserRegister;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserRegister;
 import com.sangwook.shoppingmall.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

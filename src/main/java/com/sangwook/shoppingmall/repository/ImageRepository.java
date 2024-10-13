@@ -1,6 +1,6 @@
 package com.sangwook.shoppingmall.repository;
 
-import com.sangwook.shoppingmall.domain.itemImage.ItemImage;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.ItemImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

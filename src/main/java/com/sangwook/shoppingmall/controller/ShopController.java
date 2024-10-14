@@ -22,34 +22,7 @@ import java.util.List;
 @Slf4j
 public class ShopController {
 
-    private final ItemService itemService;
     private final CartService cartService;
-
-    /**
-     *  상품
-     */
-    @PostMapping("/item/upload")
-    public void addItem(@Login User user, @RequestBody AddItem addItem) {
-        itemService.add(user, addItem);
-    }
-
-    @DeleteMapping("/item/{item_id}/delete")
-    public void deleteItem(@Login User user, @PathVariable("item_id") Long itemId) {
-        itemService.delete(user, itemId);
-    }
-
-    @GetMapping("/item/{item_id}/info")
-    public ItemInfo itemInfo(@PathVariable("item_id") Long itemId) {
-        return itemService.getInfo(itemId);
-    }
-
-    @GetMapping("/item/list")
-    public Page<ItemList> itemList(@RequestParam int page,
-                                   @RequestParam String sortType,
-                                   @RequestParam(required = false) String keyword,
-                                   @RequestParam(required = false) String category) {
-        return itemService.getList(page, sortType, keyword, category);
-    }
 
     /**
      *  장바구니

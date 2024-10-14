@@ -5,7 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemList;
-import com.sangwook.shoppingmall.entity.item.dto.QItemList;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.QItemList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,9 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.sangwook.shoppingmall.entity.item.QItem.item;
-import static com.sangwook.shoppingmall.entity.itemImage.QItemImage.itemImage;
-import static com.sangwook.shoppingmall.entity.user.QUser.user;
+import static com.sangwook.shoppingmall.entity.itemaggregate.item.domain.QItemImage.itemImage;
+import static com.sangwook.shoppingmall.entity.itemaggregate.item.domain.QItem.item;
+import static com.sangwook.shoppingmall.entity.useraggregate.user.domain.QUser.user;
+
 
 @RequiredArgsConstructor
 @Transactional

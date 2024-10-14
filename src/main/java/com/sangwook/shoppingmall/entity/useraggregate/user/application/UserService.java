@@ -147,11 +147,11 @@ public class UserService {
         User user = getUserById(userId);
         Optional<Interest> getInterest = interestRepository.findByUserIdAndCategory(userId, category);
         if (getInterest.isEmpty()) {
-            Interest interest = new Interest();
-                    interestRepository.save(interest);
+            Interest interest = user.interested(category);
+            interestRepository.save(interest);
         } else { //이미 해당 카테고리의 관심사가 있는 경우 Preference를 INTERESTED로 변경
             Interest interest = getInterest.get();
-            interest.changeScale(Preference.INTERESTED);
+            user.changeScale(category, Preference.INTERESTED);
         }
     }
 

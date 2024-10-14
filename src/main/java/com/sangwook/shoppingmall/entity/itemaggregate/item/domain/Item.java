@@ -46,11 +46,11 @@ public class Item {
     @Column(length = 1000)
     private String itemInfo;
 
-    @OneToMany(mappedBy = "item")
-    private List<ItemImage> images;
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true) //영속성 전이를 사용하여 image도 같이 관리한다
+    private List<ItemImage> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "item")
-    private List<Review> reviews;
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 
     public static Item add(AddItem addItem, User user) {
         Item item = new Item();
@@ -62,6 +62,16 @@ public class Item {
         item.itemInfo = addItem.getItemInfo();
         item.time = LocalDateTime.now();
         return item;
+    }
+
+    public Item update(AddItem addItem) {
+        this.category = addItem.getCategory();
+        this.name = addItem.getItemName();
+        this.price = addItem.getPrice();
+        this.itemCount = addItem.getItemCount();
+        this.itemInfo = addItem.getItemInfo();
+        updateImage(addItem.getImage());
+        return this;
     }
 
     public void purchased(Integer count) {
@@ -104,11 +114,24 @@ public class Item {
     }
 
     /**
+     * 3개의 기존 이미지를 삭제하고 3개의 새로운 이미지를 추가하기위해서 삭제 쿼리 3개, 추가 쿼리 3개 발생
+     * 이미지의 개수를 제한하는 방법으로 쿼리의 수를 제어할 수 있다
+     */
+    private void updateImage(List<String> imageLinks) {
+        images.clear();
+        /**
+         * orphanRemoval = true로 인해 list에서 꺼내진 객체들은 삭제된다
+         * 이때 실제 객체를 불러오는것이 아니기 때문에 fetch join으로 이미지를 가져오는 것은 의미가 없다
+         */
+        addImage(imageLinks);
+    }
+
+    /**
      * Review
      * 사실 Item과 Review를 묶지 않는 편이 나을 수도 있지만
      * Item이라는 root entity안에 2개 이상의 엔티티를 넣어 구현하고 싶었다
      */
-    public Review write(User user, ReviewWrite reviewWrite) {
+    public Review writeReview(User user, ReviewWrite reviewWrite) {
         Review review = new Review(user, this, reviewWrite.getContent(), reviewWrite.getScore());
         reviewAdded(reviewWrite.getScore());
         reviews.add(review);
@@ -121,7 +144,7 @@ public class Item {
      * 하지만 Item 객체 안에서 getReviewWithUser()메서드를 사용하여 Review를 찾는것이
      * 더 비효율적이라고 생각되어 이렇게 구현하였다
      */
-    public Review update(Review review, ReviewWrite reviewWrite) {
+    public Review updateReview(Review review, ReviewWrite reviewWrite) {
         Review update = review.update(reviewWrite.getContent(), reviewWrite.getScore());
         reviewUpdated(review.getScore(), reviewWrite.getScore());
         return update;

@@ -32,6 +32,7 @@ public class ReviewService {
     private final ItemRepository itemRepository;
     private final HistoryRepository historyRepository;
 
+    //TODO 양방향 연관관계 테스트 필요
     public Review reviewWrite(Long userId, Long itemId, ReviewWrite reviewWrite) {
         // 유저와 아이템을 바탕으로 구매 이력 조회
         isPurchased(userId, itemId);
@@ -39,28 +40,30 @@ public class ReviewService {
         User user = getUser(userId);
         Item item = getItem(itemId);
 
-        Review review = Review.write(user, item, reviewWrite);
-        item.plusReview(review);
+        Review review = item.writeReview(user, reviewWrite);
         return reviewRepository.save(review);
     }
 
-    public Review updateReview(User user, Long reviewId, ReviewWrite reviewWrite) {
+    public Review updateReview(User user, Long reviewId, Long itemId, ReviewWrite reviewWrite) {
+        Item item = getItem(itemId);
         Review review = getReview(reviewId);
         checkMine(user, review);
-        return review.update(reviewWrite);
+        return item.updateReview(review, reviewWrite);
     }
 
-    public void deleteReview(User user, Long reviewId) {
+
+    public void deleteReview(User user, Long reviewId, Long itemId) {
+        Item item = getItem(itemId);
         Review review = getReview(reviewId);
         checkMine(user, review);
         reviewRepository.delete(review);
     }
 
 
-    public Page<ReviewList> findReview(Long itemId, int page) {
-        PageRequest pageRequest = PageRequest.of(page - 1, 10);
-        return reviewRepository.getList(itemId, pageRequest);
-    }
+//    public Page<ReviewList> findReview(Long itemId, int page) {
+//        PageRequest pageRequest = PageRequest.of(page - 1, 10);
+//        return reviewRepository.getList(itemId, pageRequest);
+//    }
 
     /**
      * private Method

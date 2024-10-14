@@ -3,7 +3,6 @@ package com.sangwook.shoppingmall.service;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.application.ItemService;
 import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
-import com.sangwook.shoppingmall.repository.ImageRepository;
 import com.sangwook.shoppingmall.repository.ItemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,9 +23,6 @@ public class ItemServiceTest {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private ImageRepository imageRepository;
 
     @Autowired
     private ItemRepository itemRepository;

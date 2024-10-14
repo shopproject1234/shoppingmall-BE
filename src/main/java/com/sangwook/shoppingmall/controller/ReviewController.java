@@ -21,18 +21,13 @@ public class ReviewController {
         Review review = reviewService.reviewWrite(user.getId(), itemId, reviewWrite);
     }
 
-    @PatchMapping("/review/{review_id}/update")
-    public void update(@PathVariable("review_id") Long reviewId, @Login User user, @RequestBody ReviewWrite reviewWrite) {
-        reviewService.updateReview(user, reviewId, reviewWrite);
+    @PatchMapping("/review/{item_id}/{review_id}/update")
+    public void update(@PathVariable("item_id") Long itemId, @PathVariable("review_id") Long reviewId, @Login User user, @RequestBody ReviewWrite reviewWrite) {
+        reviewService.updateReview(user, reviewId, itemId, reviewWrite);
     }
 
-    @DeleteMapping("/review/{review_id}/delete")
-    public void delete(@PathVariable("review_id") Long reviewId, @Login User user) {
-        reviewService.deleteReview(user, reviewId);
-    }
-
-    @GetMapping("/review/{item_id}")
-    public Page<ReviewList> getReview(@PathVariable("item_id") Long itemId, @RequestParam int page) {
-        return reviewService.findReview(itemId, page);
+    @DeleteMapping("/review/{item_id}/{review_id}/delete")
+    public void delete(@PathVariable("item_id") Long itemId, @PathVariable("review_id") Long reviewId, @Login User user) {
+        reviewService.deleteReview(user, itemId, reviewId);
     }
 }

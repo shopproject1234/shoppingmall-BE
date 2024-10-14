@@ -3,7 +3,6 @@ package com.sangwook.shoppingmall.controller;
 import com.sangwook.shoppingmall.argumentResolver.Login;
 import com.sangwook.shoppingmall.constant.SessionConst;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
-import com.sangwook.shoppingmall.entity.user.dto.*;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.*;
 import com.sangwook.shoppingmall.service.EmailService;
 import com.sangwook.shoppingmall.service.RedisService;

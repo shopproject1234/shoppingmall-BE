@@ -27,6 +27,9 @@ public class Interest {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    /**
+     * 특정 카테고리에 대한 관심의 정도를 나타냄
+     */
     @Enumerated(EnumType.STRING)
     private Preference scale;
 

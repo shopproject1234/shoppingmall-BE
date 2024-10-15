@@ -1,6 +1,6 @@
-package com.sangwook.shoppingmall.repository;
+package com.sangwook.shoppingmall.entity.historyaggregate.history.infra;
 
-import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.History;
+import com.sangwook.shoppingmall.entity.historyaggregate.history.domain.History;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

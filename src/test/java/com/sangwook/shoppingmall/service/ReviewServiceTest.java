@@ -6,7 +6,7 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.applicat
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
-import com.sangwook.shoppingmall.repository.ReviewRepository;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.infra.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.sangwook.shoppingmall.repository;
+package com.sangwook.shoppingmall.entity.itemaggregate.item.child.itemImage.infra;
 
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.ItemImage;
 import org.springframework.data.jpa.repository.JpaRepository;

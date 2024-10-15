@@ -1,4 +1,4 @@
-package com.sangwook.shoppingmall.repository;
+package com.sangwook.shoppingmall.entity.useraggregate.user.child.interest.infra;
 
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Preference;

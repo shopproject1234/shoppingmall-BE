@@ -1,20 +1,17 @@
 package com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.application;
 
-import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.History;
+import com.sangwook.shoppingmall.entity.historyaggregate.history.domain.History;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
-import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.ReviewList;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Review;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.ReviewWrite;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.exception.custom.UserValidationException;
-import com.sangwook.shoppingmall.repository.HistoryRepository;
-import com.sangwook.shoppingmall.repository.ItemRepository;
-import com.sangwook.shoppingmall.repository.UserRepository;
-import com.sangwook.shoppingmall.repository.ReviewRepository;
+import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
+import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.infra.ReviewRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

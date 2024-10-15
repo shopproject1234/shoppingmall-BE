@@ -5,8 +5,8 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.application.ItemServi
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
-import com.sangwook.shoppingmall.repository.CartRepository;
-import com.sangwook.shoppingmall.repository.HistoryRepository;
+import com.sangwook.shoppingmall.entity.cartaggregate.cart.infra.CartRepository;
+import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

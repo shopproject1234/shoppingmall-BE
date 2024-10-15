@@ -1,7 +1,7 @@
 package com.sangwook.shoppingmall.service;
 
 import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
-import com.sangwook.shoppingmall.repository.InterestRepository;
+import com.sangwook.shoppingmall.entity.useraggregate.user.child.interest.infra.InterestRepository;
 import com.sangwook.shoppingmall.service.fake.FakeEmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.sangwook.shoppingmall.entity.historyaggregate.history.infra;
+package com.sangwook.shoppingmall.entity.historyaggregate.history.domain;
 
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.Cart;

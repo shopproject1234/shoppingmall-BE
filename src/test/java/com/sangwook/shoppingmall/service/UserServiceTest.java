@@ -1,8 +1,16 @@
 package com.sangwook.shoppingmall.service;
 
+import com.sangwook.shoppingmall.constant.Category;
+import com.sangwook.shoppingmall.constant.Gender;
 import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
 import com.sangwook.shoppingmall.entity.useraggregate.user.child.interest.infra.InterestRepository;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.Interest;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserInfo;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserRegister;
+import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.service.fake.FakeEmailService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -27,6 +40,23 @@ class UserServiceTest {
 
     @Autowired
     private InterestRepository interestRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    User user;
+
+    @BeforeEach
+    void setUser() {
+        UserRegister userRegister = new UserRegister();
+        userRegister.setBirth("2000-09-14");
+        userRegister.setEmail("sangwook@naver.com");
+        userRegister.setPassword("123123");
+        userRegister.setNickname("sangwook");
+        userRegister.setGender(Gender.MALE);
+        userRegister.setPhoneNumber("01011111111");
+        userRegister.setCategory(new ArrayList<>());
+        user = userService.register(userRegister);
+    }
 
     @Test
     @DisplayName("사용자는 회원가입 시 이메일 인증을 한다")
@@ -76,16 +106,83 @@ class UserServiceTest {
     @Test
     @DisplayName("사용자는 관심사를 추가할 수 있다")
     void test5_1() {
+        //given
+        UserInfo userInfo = new UserInfo();
+        userInfo.setCategory(List.of(Category.APPLIANCE, Category.KITCHENWARE));
+        userInfo.setNickname("sangwook1");
+
+        //when
+        userService.changeUserInfo(user.getId(), userInfo);
+
+        //then
+        User getUser = userRepository.findById(user.getId()).get();
+        assertThat(getUser.getInterests()).size().isEqualTo(2);
+        List<Category> categoryList = new ArrayList<>();
+        List<Interest> interests = getUser.getInterests();
+        for (Interest interest : interests) {
+            categoryList.add(interest.getCategory());
+        }
+
+        assertThat(categoryList.size()).isEqualTo(2);
+        assertThat(categoryList.contains(Category.APPLIANCE)).isTrue();
+        assertThat(categoryList.contains(Category.KITCHENWARE)).isTrue();
+        assertThat(getUser.getName()).isEqualTo("sangwook1");
+
     }
 
     @Test
     @DisplayName("사용자는 관심사를 삭제할 수 있다")
     void test5_2() {
+        //given
+        UserInfo userInfo1 = new UserInfo();
+        userInfo1.setCategory(List.of(Category.APPLIANCE, Category.KITCHENWARE));
+        userInfo1.setNickname("sangwook1");
+
+        UserInfo userInfo2 = new UserInfo();
+        userInfo2.setCategory(new ArrayList<>());
+        userInfo2.setNickname("sangwook1");
+
+        //when
+        userService.changeUserInfo(user.getId(), userInfo1);
+        userService.changeUserInfo(user.getId(), userInfo2);
+
+        //then
+        User getUser = userRepository.findById(user.getId()).get();
+
+        assertThat(getUser.getInterests()).isEmpty();
+
     }
 
     @Test
     @DisplayName("사용자는 관심사를 추가하면서 삭제할 수 있다")
     void test5_3() {
+        //given
+        UserInfo userInfo1 = new UserInfo();
+        userInfo1.setCategory(List.of(Category.APPLIANCE, Category.KITCHENWARE));
+        userInfo1.setNickname("sangwook1");
+
+        UserInfo userInfo2 = new UserInfo();
+        userInfo2.setCategory(List.of(Category.FURNITURE, Category.KITCHENWARE)); //FURNITURE 추가, KITCHENWARE 유지, APPLIANCE 삭제
+        userInfo2.setNickname("sangwook1");
+
+        //when
+        userService.changeUserInfo(user.getId(), userInfo1);
+        userService.changeUserInfo(user.getId(), userInfo2);
+
+        //then
+        User getUser = userRepository.findById(user.getId()).get();
+
+        assertThat(getUser.getInterests()).size().isEqualTo(2);
+        List<Category> categoryList = new ArrayList<>();
+        List<Interest> interests = getUser.getInterests();
+        for (Interest interest : interests) {
+            categoryList.add(interest.getCategory());
+        }
+
+        assertThat(categoryList.size()).isEqualTo(2);
+        assertThat(categoryList.contains(Category.FURNITURE)).isTrue();
+        assertThat(categoryList.contains(Category.KITCHENWARE)).isTrue();
+        assertThat(getUser.getName()).isEqualTo("sangwook1");
     }
 
     @Test

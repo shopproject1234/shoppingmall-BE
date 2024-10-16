@@ -1,6 +1,9 @@
 package com.sangwook.shoppingmall.service;
 
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.EmailCheck;
+import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.exception.custom.EmailSendException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -26,15 +29,25 @@ public class EmailServiceImpl implements EmailService{
 
     private final JavaMailSender javaMailSender;
     private final RedisService redisService;
+    private final UserRepository userRepository;
 
     @Value("${spring.mail.username}")
     private String sender;
 
     @Async
     @Override
-    public void sendMail(String email) {
+    public void sendVerifyMail(String email) {
         int code = generateCode();
         MimeMessage mail = createMail(email, code);
+        javaMailSender.send(mail);
+    }
+
+    @Async
+    @Override
+    public void sendItemMail(Item item) {
+        User user = item.getUser();
+        String body = createItemForm(item, user);
+        MimeMessage mail = createMail(user.getEmail(), body);
         javaMailSender.send(mail);
     }
 
@@ -66,6 +79,20 @@ public class EmailServiceImpl implements EmailService{
         return message;
     }
 
+    private MimeMessage createMail(String email, String body) {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            message.setFrom(sender);
+            message.setRecipients(MimeMessage.RecipientType.TO, email);
+            message.setSubject("ShopProject : 상품 관련 이메일 전송입니다");
+
+            message.setText(body);
+        } catch (MessagingException e) {
+            throw new EmailSendException("이메일 전송중 오류 : " + e.getMessage(), getMethodName());
+        }
+        return message;
+    }
+
     private void saveEmailCode(String email, Integer code) {
         //이미 Redis에 해당 이메일을 Key로 하는 데이터가 있을 경우 지우고 새로 생성
         Integer getCode = redisService.getCode(email);
@@ -79,5 +106,13 @@ public class EmailServiceImpl implements EmailService{
 
     private int generateCode() {
         return (int)(Math.random() * (90000)) + 100000;
+    }
+
+    private String createItemForm(Item item, User user) {
+        String defaultBody = user.getName() + "님의 " + item.getName() + " 상품의 재고가 ";
+        if (item.getItemCount() == 0) {
+            return defaultBody + "품절되었습니다.";
+        }
+        return defaultBody + item.getItemCount() + "개 남았습니다.";
     }
 }

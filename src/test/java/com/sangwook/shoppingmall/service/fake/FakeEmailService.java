@@ -1,5 +1,6 @@
 package com.sangwook.shoppingmall.service.fake;
 
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.EmailCheck;
 import com.sangwook.shoppingmall.exception.custom.EmailSendException;
 import com.sangwook.shoppingmall.service.EmailService;
@@ -19,9 +20,14 @@ public class FakeEmailService implements EmailService {
     public Map<String, Integer> emailAndCode = new HashMap<>();
 
     @Override
-    public void sendMail(String email) {
+    public void sendVerifyMail(String email) {
         code = generateCode();
         emailAndCode.put(email, code);
+    }
+
+    @Override
+    public void sendItemMail(Item item) {
+
     }
 
     @Override

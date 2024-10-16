@@ -52,14 +52,14 @@ public class LoginController {
             //해당 유저가 이미 존재하는 경우
             throw new IllegalStateException(); //FIXME
         }
-        emailService.sendMail(check.getEmail());
+        emailService.sendVerifyMail(check.getEmail());
     }
 
     @PostMapping("/user/pwCheck")
     public void sendEmail(@RequestBody PassCheck check, @Login User user) {
         Boolean checked = userService.checkPass(check, user);
         if (checked) {
-            emailService.sendMail(user.getEmail());
+            emailService.sendVerifyMail(user.getEmail());
         }
     }
 

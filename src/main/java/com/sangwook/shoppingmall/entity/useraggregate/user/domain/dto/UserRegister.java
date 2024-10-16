@@ -24,15 +24,6 @@ public class UserRegister {
 
     private List<String> category;
 
-    public UserRegister(String email, String nickname, String password, String phoneNumber, String birth, Gender gender) {
-        this.email = email;
-        this.nickname = nickname;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.birth = birth;
-        this.gender = gender;
-    }
-
     public UserRegister(String email, String nickname, String password, String phoneNumber, String birth, Gender gender, List<String> categories) {
         this.email = email;
         this.nickname = nickname;

@@ -13,6 +13,9 @@ import com.sangwook.shoppingmall.entity.cartaggregate.cart.infra.CartRepository;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
+fimport com.sangwook.shoppingmall.service.EmailService;
+import com.sangwook.shoppingmall.service.EmailService;
+import com.sangwook.shoppingmall.service.EmailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +35,7 @@ public class CartService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final HistoryRepository historyRepository;
+    private final EmailService emailService;
 
     //장바구니 상품 등록
     public Cart add(Long userId, AddCart addCart) {
@@ -43,10 +47,13 @@ public class CartService {
         }
 
         Optional<Cart> cart = getCart(userId, addCart.getItemId());
-        if (cart.isPresent()) { //이미 장바구니에 해당 상품이 존재할 경우 카운트를 늘려줌
-            Cart getCart = cart.get();
-            getCart.addCount(addCart.getItemCount()); //TODO 해당 상품의 수량 확인 후 원하는 수량보다 적을 경우 Exception 추가 필요
-            return getCart;
+        if (cart.isPresent()) { //이미 장바구니에 해당 상품이 존재할 경우 예외 처리
+            throw new IllegalStateException(); //FIXME
+        }
+
+        //카트에 담으려는 상품의 수보다 남은 상품의 재고가 적은 경우
+        if (item.getItemCount() < addCart.getItemCount()) {
+            throw new IllegalStateException(); //FIXME
         }
         Cart newCart = Cart.add(user, item, addCart.getItemCount());
         return cartRepository.save(newCart);
@@ -56,7 +63,6 @@ public class CartService {
         Optional<Cart> cart = getCart(userId, deleteCart.getItemId());
         cart.ifPresent(cartRepository::delete);
     }
-
 
     public List<MyCart> getMyCart(Long userId) { //TODO N+1 문제 발생 가능성 있음 - 테스트 필요
         List<Cart> carts = cartRepository.findAllByUserId(userId);
@@ -70,7 +76,17 @@ public class CartService {
     public void order(Long userId) { //FIXME order메서드에서 주문시 item의 수량 줄여야함 N+1 문제 조심
         List<Cart> carts = cartRepository.findAllByUserId(userId);
         for (Cart cart : carts) {
+            //주문 시에도 상품의 수를 재확인, 주문하려는 수량보다 재고가 적게 남은 경우 예외처리
+            //구매 성공시 상품의 수량을 줄인다
+            Item item = cart.getItem(); //카트에 담긴 아이템 만큼 N+1 문제 가능성
+            if (item.getItemCount() < cart.getCount()) {
+                throw new IllegalStateException(); //FIXME
+            }
             History history = History.purchased(cart);
+            item.purchased(cart.getCount());
+            if (item.getItemCount() <= 3) {
+                emailService.sendItemMail(item);
+            }
             historyRepository.save(history);
         }
         cartRepository.deleteAll(carts);
@@ -78,6 +94,7 @@ public class CartService {
 
     /**
      *  private Method
+     *  다른 Aggregate의 Root Entity만 private Method로 조회하여 사용
      */
     private User getUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);

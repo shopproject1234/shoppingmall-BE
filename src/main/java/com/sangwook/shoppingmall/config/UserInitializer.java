@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.List;
+
 @Configuration
 @RequiredArgsConstructor
 @Profile("!test")
@@ -23,7 +25,7 @@ public class UserInitializer {
     public CommandLineRunner init() {
         return args -> {
             if (userRepository.findByEmail("tkddnr@naver.com").isEmpty()) {
-                UserRegister userRegister = new UserRegister("tkddnr@naver.com", "상욱", "123123", "01011112222", "2000-09-14", Gender.MALE);
+                UserRegister userRegister = new UserRegister("tkddnr@naver.com", "상욱", "123123", "01011112222", "2000-09-14", Gender.MALE, List.of());
                 String encoded = passwordEncoder.encode(userRegister.getPassword());
 
                 User user = User.register(userRegister, encoded);

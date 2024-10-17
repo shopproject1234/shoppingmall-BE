@@ -1,12 +1,26 @@
+#spring:
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: "jdbc:h2:tcp://localhost/~/shoppingmall"
+#    username: sa
+#    password:
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: "jdbc:h2:tcp://localhost/~/shoppingmall"
-    username: sa
-    password:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/shoppingmall
+    username: root
+    password: 1234
   profiles:
     include: security
   jpa:
     hibernate:
       ddl-auto: create
 
+
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: none
+        http-only: false
+        max-age: 30m

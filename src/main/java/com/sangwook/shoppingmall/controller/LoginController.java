@@ -7,7 +7,9 @@ import com.sangwook.shoppingmall.domain.user.dto.*;
 import com.sangwook.shoppingmall.service.EmailService;
 import com.sangwook.shoppingmall.service.RedisService;
 import com.sangwook.shoppingmall.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +36,12 @@ public class LoginController {
     }
 
     @PostMapping("/user/login")
-    public LoginResponse login(@RequestBody UserLogin userLogin, HttpServletRequest request) {
+    public LoginResponse login(@RequestBody UserLogin userLogin, HttpServletRequest request, HttpServletResponse response) {
         User user = userService.login(userLogin);
-        request.getSession().setAttribute(SessionConst.LOGIN_USER, user);
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionConst.LOGIN_USER, user);
+        String sessionId = session.getId();
+        response.setHeader("JSESSIONID", sessionId);
         return new LoginResponse(user.getId(), user.getName());
     }
 

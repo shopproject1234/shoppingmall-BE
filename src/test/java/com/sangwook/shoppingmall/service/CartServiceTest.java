@@ -2,7 +2,6 @@ package com.sangwook.shoppingmall.service;
 
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Gender;
-import com.sangwook.shoppingmall.entity.cartaggregate.cart.application.CartService;
 import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.Cart;
 import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.dto.AddCart;
 import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.dto.DeleteCart;
@@ -17,6 +16,8 @@ import com.sangwook.shoppingmall.entity.cartaggregate.cart.infra.CartRepository;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserRegister;
 import com.sangwook.shoppingmall.exception.custom.MyItemException;
+import com.sangwook.shoppingmall.service.fake.FakeCartService;
+import com.sangwook.shoppingmall.service.fake.FakeEmailService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,9 +39,10 @@ public class CartServiceTest {
 
     @Autowired private UserService userService;
     @Autowired private ItemService itemService;
-    @Autowired private CartService cartService;
+    @Autowired private FakeCartService cartService; //FakeService 주입 - 해당 Service의 EmailService도 Fake로 구현되어있어 실제 메일이 발송되지 않는다
     @Autowired private CartRepository cartRepository;
     @Autowired private HistoryRepository historyRepository;
+    @Autowired private FakeEmailService fakeEmailService;
 
     User user;
     Item item;
@@ -261,5 +263,25 @@ public class CartServiceTest {
         //then
         assertThatThrownBy(() -> cartService.order(user.getId())).isInstanceOf(IllegalStateException.class);
 
+    }
+
+    @Test
+    @DisplayName("주문에 성공하여 상품의 재고가 감소한 후 상품의 재고가 3개 이하로 남으면 상품의 주인에게 메일을 발송한다")
+    void test4_4() {
+        //given
+        UserRegister userRegister = new UserRegister("taaaa@naver.com",
+                "상욱2", "123123",
+                "01011112222", "2012-11-22",
+                Gender.MALE, List.of());
+        User user = userService.register(userRegister);
+
+        AddCart addCart = new AddCart();
+        addCart.setItemId(item.getId());
+        addCart.setItemCount(3);
+        cartService.add(user.getId(), addCart);
+
+        cartService.order(user.getId());
+
+        assertThat(fakeEmailService.sended).isTrue();
     }
 }

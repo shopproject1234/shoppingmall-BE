@@ -18,6 +18,7 @@ public class FakeEmailService implements EmailService {
 
     public int code;
     public Map<String, Integer> emailAndCode = new HashMap<>();
+    public boolean sended;
 
     @Override
     public void sendVerifyMail(String email) {
@@ -27,7 +28,7 @@ public class FakeEmailService implements EmailService {
 
     @Override
     public void sendItemMail(Item item) {
-
+        sended = true;
     }
 
     @Override

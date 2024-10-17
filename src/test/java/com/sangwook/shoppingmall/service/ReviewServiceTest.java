@@ -1,6 +1,6 @@
 package com.sangwook.shoppingmall.service;
 
-import com.sangwook.shoppingmall.entity.cartaggregate.cart.application.CartService;
+import com.sangwook.shoppingmall.entity.cartaggregate.cart.application.CartServiceImpl;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.application.ItemService;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.application.ReviewService;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
@@ -23,7 +23,7 @@ public class ReviewServiceTest {
     @Autowired private UserService userService;
     @Autowired private ItemService itemService;
     @Autowired private ReviewService reviewService;
-    @Autowired private CartService cartService;
+    @Autowired private CartServiceImpl cartServiceImpl;
     @Autowired private ReviewRepository reviewRepository;
 
 

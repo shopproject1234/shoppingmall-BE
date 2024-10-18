@@ -31,7 +31,7 @@ public class ItemInfo {
     private Float reviewAverage;
     private Integer sales;
 
-    public ItemInfo(Item item, User user, List<ItemImage> image) {
+    public ItemInfo(Item item, List<ItemImage> image) {
         this.itemId = item.getId();
         this.itemName = item.getName();
         this.price = item.getPrice();
@@ -40,8 +40,8 @@ public class ItemInfo {
         this.itemInfo = item.getItemInfo();
         this.uploadTime = item.getTime();
 
-        this.uploadUserId = user.getId();
-        this.uploadUserName = user.getName();
+        this.uploadUserId = item.getUser().getId();
+        this.uploadUserName = item.getUser().getName();
 
         this.image = image.stream().map(ItemImage::getImageLink).toList();
 

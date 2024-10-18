@@ -44,11 +44,11 @@ public class ItemService {
         itemRepository.delete(item);
     }
 
-    public void update(User user, Long itemId, AddItem addItem) {
+    public Item update(User user, Long itemId, AddItem addItem) {
         Item item = getItem(itemId);
         checkMine(user, item);
         item = item.update(addItem);
-        itemRepository.save(item);
+        return itemRepository.save(item);
     }
 
     /**
@@ -57,7 +57,7 @@ public class ItemService {
     public ItemInfo getInfo(Long itemId) {
         Item item = getItem(itemId);
         List<ItemImage> image = imageRepository.findByItemId(itemId);
-        return new ItemInfo(item, item.getUser(), image);
+        return new ItemInfo(item, image);
     }
 
     public Page<ItemList> getList(int page, String sortType, String keyword, String category) {

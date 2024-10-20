@@ -12,6 +12,12 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfig implements AsyncConfigurer {
 
+    /**
+     * ExecutorService의 설정
+     * setCorePoolSize - 기본으로 유지되는 쓰레드 개수
+     * setQueueCapacity - 기본으로 유지되는 쓰레드가 작업중일 때 다음 task를 저장할 queue의 사이즈
+     * setMaxPoolSize - 기본으로 유지되는 쓰레드도 모두 작업중이고, Queue에 task도 모두 찼을 때 늘어나게 되는 쓰레드의 최대 개수
+     */
     @Override
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

@@ -99,6 +99,10 @@ public class Item {
         this.reviewCount += 1;
     }
 
+    private void reviewDeleted(float score) {
+        // TODO 리뷰가 삭제될 때 Item의 review 점수 갱신
+    }
+
     /**
      * ItemImage
      */
@@ -133,7 +137,7 @@ public class Item {
      */
     public Review writeReview(User user, ReviewWrite reviewWrite) {
         Review review = new Review(user, this, reviewWrite.getContent(), reviewWrite.getScore());
-        reviewAdded(reviewWrite.getScore());
+        reviewAdded(reviewWrite.getScore()); //리뷰가 추가될 때 Item의 상태를 바꿔주는 메서드
         reviews.add(review);
         return review;
     }

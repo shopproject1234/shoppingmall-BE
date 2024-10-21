@@ -1,6 +1,7 @@
 package com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.application;
 
 import com.sangwook.shoppingmall.entity.historyaggregate.history.domain.History;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.ReviewList;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Review;
@@ -12,6 +13,8 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.infra.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,16 +32,20 @@ public class ReviewService {
     private final ItemRepository itemRepository;
     private final HistoryRepository historyRepository;
 
-    //TODO 양방향 연관관계 테스트 필요
     public Review reviewWrite(Long userId, Long itemId, ReviewWrite reviewWrite) {
         // 유저와 아이템을 바탕으로 구매 이력 조회
         isPurchased(userId, itemId);
 
+        // 이미 작성한 리뷰가 있을 경우 예외 발생
+        // 조회만을 위한 repository 사용은 ddd의 개념에 위배되지 않는다 (Item 객체 내부의 List<Review>에서 탐색하는 것보다 효율적)
+        Optional<Review> review = reviewRepository.findByItemIdAndUserId(itemId, userId);
+        if (review.isPresent()) {
+            throw new IllegalStateException(); //FIXME
+        }
+
         User user = getUser(userId);
         Item item = getItem(itemId);
-
-        Review review = item.writeReview(user, reviewWrite);
-        return reviewRepository.save(review);
+        return item.writeReview(user, reviewWrite);
     }
 
     public Review updateReview(User user, Long reviewId, Long itemId, ReviewWrite reviewWrite) {
@@ -57,10 +64,10 @@ public class ReviewService {
     }
 
 
-//    public Page<ReviewList> findReview(Long itemId, int page) {
-//        PageRequest pageRequest = PageRequest.of(page - 1, 10);
-//        return reviewRepository.getList(itemId, pageRequest);
-//    }
+    public Page<ReviewList> findReview(Long itemId, int page) {
+        PageRequest pageRequest = PageRequest.of(page - 1, 10);
+        return reviewRepository.getList(itemId, pageRequest);
+    }
 
     /**
      * private Method

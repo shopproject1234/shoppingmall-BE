@@ -16,7 +16,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "DELETE", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true)
-                .exposedHeaders("*")
+                .exposedHeaders("JSESSIONID")
                 .maxAge(3600);
     }
 }

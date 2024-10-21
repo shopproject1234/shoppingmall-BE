@@ -7,7 +7,6 @@ import com.sangwook.shoppingmall.domain.user.dto.*;
 import com.sangwook.shoppingmall.service.EmailService;
 import com.sangwook.shoppingmall.service.RedisService;
 import com.sangwook.shoppingmall.service.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;

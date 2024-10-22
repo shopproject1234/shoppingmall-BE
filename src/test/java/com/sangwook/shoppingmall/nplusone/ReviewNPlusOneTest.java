@@ -1,4 +1,4 @@
-package com.sangwook.shoppingmall.service;
+package com.sangwook.shoppingmall.nplusone;
 
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Gender;
@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("test")
-public class NPlusOneTest {
+public class ReviewNPlusOneTest {
 
     @Autowired
     private UserService userService;
@@ -130,8 +130,8 @@ public class NPlusOneTest {
     }
 
     /**
-     * 사용된 쿼리 "select i from Item i join fetch i.reviews r join fetch r.user where i.id=:itemId"
-     * item 객체안의 reviews의 user를 한꺼번에 fetch 조인한다
+     * 사용된 쿼리 "select i from Item i join fetch i.reviews r join fetch r.user where i.id=:itemId" -> 변경 "select i from Item i join fetch i.reviews where i.id=:itemId"
+     * item 객체안의 reviews의 user를 한꺼번에 fetch 조인한다 -> item 객체안의 review를 한꺼번에 조인
      */
     @Test
     @DisplayName("사용자는 본인이 작성한 리뷰를 삭제할 수 있다 - deleteReviewFetch() 사용")

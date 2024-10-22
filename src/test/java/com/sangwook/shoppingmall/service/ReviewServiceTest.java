@@ -2,7 +2,6 @@ package com.sangwook.shoppingmall.service;
 
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Gender;
-import com.sangwook.shoppingmall.entity.cartaggregate.cart.application.CartServiceImpl;
 import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.dto.AddCart;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.application.ItemService;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.application.ReviewService;
@@ -16,6 +15,8 @@ import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.infra.ReviewRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserRegister;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
+import com.sangwook.shoppingmall.service.fake.FakeCartService;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -38,8 +40,9 @@ public class ReviewServiceTest {
     @Autowired private UserService userService;
     @Autowired private ItemService itemService;
     @Autowired private ReviewService reviewService;
-    @Autowired private CartServiceImpl cartService;
+    @Autowired private FakeCartService cartService;
     @Autowired private ReviewRepository reviewRepository;
+    @Autowired private EntityManager em;
 
     User user;
     Item item;
@@ -166,10 +169,58 @@ public class ReviewServiceTest {
     @Test
     @DisplayName("사용자는 본인이 작성한 리뷰를 수정할 수 있다")
     void test3() {
+        //given
+        ReviewWrite reviewWrite = new ReviewWrite();
+        reviewWrite.setContent("상태가 좋군요");
+        reviewWrite.setScore(4.5f);
+
+        AddCart addCart = new AddCart();
+        addCart.setItemId(item.getId());
+        addCart.setItemCount(3);
+        cartService.add(newUser.getId(), addCart);
+
+        cartService.order(newUser.getId());
+
+        Review review = reviewService.reviewWrite(newUser.getId(), item.getId(), reviewWrite);
+
+        //when
+        ReviewWrite update = new ReviewWrite();
+        update.setContent("상태가 별로네요");
+        update.setScore(3.5f);
+
+        System.out.println("리뷰 업데이트 시작");
+        Review updated = reviewService.updateReview(newUser, review.getId(), item.getId(), update);
+        System.out.println("리뷰 업데이트 종료");
+
+        assertThat(updated.getContent()).isEqualTo("상태가 별로네요");
+        assertThat(updated.getScore()).isEqualTo(3.5f);
+        assertThat(item.getReviewAverage()).isEqualTo(3.5f);
     }
 
     @Test
     @DisplayName("사용자는 본인이 작성한 리뷰를 삭제할 수 있다")
     void test4() {
+        //given
+        ReviewWrite reviewWrite = new ReviewWrite();
+        reviewWrite.setContent("상태가 좋군요");
+        reviewWrite.setScore(4.5f);
+
+        AddCart addCart = new AddCart();
+        addCart.setItemId(item.getId());
+        addCart.setItemCount(3);
+        cartService.add(newUser.getId(), addCart);
+
+        cartService.order(newUser.getId());
+
+        Review review = reviewService.reviewWrite(newUser.getId(), item.getId(), reviewWrite); //review를 item 객체의 List<Review>에 저장하지만 flush 되기 전까지 review의 id가 나오지 않음
+        em.flush();
+
+        Long reviewId = review.getId();
+        //when
+        reviewService.deleteReview(newUser, reviewId, item.getId()); //orphanRemoval로 review 제거, flush로 영속성 컨텍스트 변경 내용 반영
+        em.flush();
+
+        Optional<Review> getReview = reviewRepository.findById(reviewId);
+        assertThat(getReview).isEmpty();
     }
 }

@@ -5,7 +5,6 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.d
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.AddItem;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
-import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -13,8 +12,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Entity
 @Getter
@@ -130,7 +127,7 @@ public class Item {
         images.clear();
         /**
          * orphanRemoval = true로 인해 list에서 꺼내진 객체들은 삭제된다
-         * 이때 실제 객체를 불러오는것이 아니기 때문에 fetch join으로 이미지를 가져오는 것은 의미가 없다
+         * 이때 실제 객체를 불러오는것이 아니기 때문에 fetch join으로 이미지를 가져오는 것은 의미가 없다 - 테스트 해본 결과 fetch join을 해도 똑같이 쿼리가 나갔다
          */
         addImage(imageLinks);
     }

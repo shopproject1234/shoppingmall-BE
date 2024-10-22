@@ -49,6 +49,12 @@ public class Review {
         return this;
     }
 
+    protected void checkMine(User user) {
+        if (!getUser().equals(user)) {
+            throw new UserValidationException("본인의 리뷰가 아닙니다");
+        }
+    }
+
     //id가 같을 경우 같은 리뷰로 판단
     @Override
     public boolean equals(Object object) {

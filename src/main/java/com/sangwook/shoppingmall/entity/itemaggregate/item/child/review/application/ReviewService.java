@@ -50,15 +50,16 @@ public class ReviewService {
 
     public Review updateReview(User user, Long reviewId, Long itemId, ReviewWrite reviewWrite) {
         Item item = getItemFetchReview(itemId);
-        return item.updateReview(user, reviewWrite);
+        return item.updateReview(user, reviewWrite, reviewId);
     }
 
     /**
-     * N+1이 발생하는 코드
+     * N+1이 발생하는 코드, 테스트 코드에서만 사용
      */
+    @Deprecated
     public void deleteReview(User user, Long reviewId, Long itemId) {
         Item item = getItem(itemId);
-        item.deleteReview(user);
+        item.deleteReview(user, reviewId);
     }
 
     /**
@@ -66,7 +67,7 @@ public class ReviewService {
      */
     public void deleteReviewFetch(User user, Long reviewId, Long itemId) {
         Item item = getItemFetchReview(itemId);
-        item.deleteReview(user);
+        item.deleteReview(user, reviewId);
     }
 
 

@@ -217,10 +217,12 @@ public class ReviewServiceTest {
 
         Long reviewId = review.getId();
         //when
-        reviewService.deleteReview(newUser, reviewId, item.getId()); //orphanRemoval로 review 제거, flush로 영속성 컨텍스트 변경 내용 반영
+        reviewService.deleteReviewFetch(newUser, reviewId, item.getId()); //orphanRemoval로 review 제거, flush로 영속성 컨텍스트 변경 내용 반영
         em.flush();
 
         Optional<Review> getReview = reviewRepository.findById(reviewId);
         assertThat(getReview).isEmpty();
+        assertThat(item.getReviewCount()).isEqualTo(0);
+        assertThat(item.getReviewAverage()).isEqualTo(0);
     }
 }

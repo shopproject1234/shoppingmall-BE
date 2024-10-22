@@ -4,6 +4,7 @@ import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.ReviewWrite;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.AddItem;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -103,7 +104,8 @@ public class Item {
     }
 
     private void reviewDeleted(float score) {
-        // TODO 리뷰가 삭제될 때 Item의 review 점수 갱신
+        this.reviewAverage = Math.round(((reviewAverage * reviewCount) - score) / (reviewCount - 1) * 100) / 100.0f;
+        this.reviewCount -= 1;
     }
 
     /**
@@ -151,17 +153,21 @@ public class Item {
      * 하지만 Item 객체 안에서 getReviewWithUser()메서드를 사용하여 Review를 찾는것이
      * 더 비효율적이라고 생각되어 이렇게 구현하였다
      */
-    public Review updateReview(User user, ReviewWrite reviewWrite) {
+    public Review updateReview(User user, ReviewWrite reviewWrite, Long reviewId) {
         //리뷰를 찾아온다
-        Review review = getReviewWithUser(user);
+        Review review = getReview(reviewId);
+        review.checkMine(user);
 
         //찾아온 리뷰를 업데이트 한다
         reviewUpdated(review.getScore(), reviewWrite.getScore());
         return review.update(reviewWrite.getContent(), reviewWrite.getScore());
     }
 
-    public void deleteReview(User user) {
-        Review review = getReviewWithUser(user);
+    public void deleteReview(User user, Long reviewId) {
+        Review review = getReview(reviewId);
+        review.checkMine(user);
+        reviewDeleted(review.getScore());
+
         reviews.remove(review);
     }
 
@@ -171,7 +177,16 @@ public class Item {
      * N+1 문제가 발생할 수 있는 이 메서드에서 반복문을 돌려서 1개의 특정 리뷰를 찾는것이란 너무 비효율적이다
      * 이 메서드는 사용하지는 않고 구현만 해놓을 예정이다
      * 특정 리뷰를 찾을 때는 repository를 사용하여 찾아오도록 할것이다
+     *
+     * 2024.10.22 변경
+     * 해당 메서드가 N+1문제를 초래할 수 있음을 확인하였다
+     * 테스트코드 작성 결과 페치 조인등을 사용하여 즉시로딩되도록 값을 가져온다면 해결할 수 있었다
+     *
+     * 하지만 굳이 User까지 fetch Join을 하여 Review를 찾아와야 하나 싶었다
+     * 그냥 reviewId로 찾아오면 되고 찾아온 리뷰가 작성한 사람과 같은지 쿼리 1번만 더 날려서 확인하면 됐었다
+     * getReview() 메서드 확인
      */
+    @Deprecated
     private Review getReviewWithUser(User user) {
         for (Review review : reviews) {
             if (review.getUser().equals(user)) {
@@ -179,6 +194,15 @@ public class Item {
             }
         }
         throw new IllegalStateException();
+    }
+
+    private Review getReview(Long reviewId) {
+        for (Review review : reviews) {
+            if (review.getId().equals(reviewId)) {
+                return review;
+            }
+        }
+        throw new ObjectNotFoundException("리뷰가 없습니다");
     }
 
     @Override

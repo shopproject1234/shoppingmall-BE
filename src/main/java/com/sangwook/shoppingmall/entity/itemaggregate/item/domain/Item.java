@@ -147,12 +147,6 @@ public class Item {
         return review;
     }
 
-    /**
-     * 엄밀히 말하면 DDD의 규칙에 어긋나는 코드이다
-     * 이 메서드는 Review 객체를 외부에서 가져오고 있다
-     * 하지만 Item 객체 안에서 getReviewWithUser()메서드를 사용하여 Review를 찾는것이
-     * 더 비효율적이라고 생각되어 이렇게 구현하였다
-     */
     public Review updateReview(User user, ReviewWrite reviewWrite, Long reviewId) {
         //리뷰를 찾아온다
         Review review = getReview(reviewId);

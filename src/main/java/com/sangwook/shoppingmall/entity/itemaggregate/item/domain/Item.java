@@ -4,6 +4,7 @@ import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.ReviewWrite;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.AddItem;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -11,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Entity
 @Getter
@@ -49,7 +52,7 @@ public class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true) //영속성 전이를 사용하여 image도 같이 관리한다
     private List<ItemImage> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
     public static Item add(AddItem addItem, User user) {
@@ -148,10 +151,18 @@ public class Item {
      * 하지만 Item 객체 안에서 getReviewWithUser()메서드를 사용하여 Review를 찾는것이
      * 더 비효율적이라고 생각되어 이렇게 구현하였다
      */
-    public Review updateReview(Review review, ReviewWrite reviewWrite) {
-        Review update = review.update(reviewWrite.getContent(), reviewWrite.getScore());
+    public Review updateReview(User user, ReviewWrite reviewWrite) {
+        //리뷰를 찾아온다
+        Review review = getReviewWithUser(user);
+
+        //찾아온 리뷰를 업데이트 한다
         reviewUpdated(review.getScore(), reviewWrite.getScore());
-        return update;
+        return review.update(reviewWrite.getContent(), reviewWrite.getScore());
+    }
+
+    public void deleteReview(User user) {
+        Review review = getReviewWithUser(user);
+        reviews.remove(review);
     }
 
     /**

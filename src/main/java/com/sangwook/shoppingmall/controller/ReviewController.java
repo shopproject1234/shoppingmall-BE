@@ -28,6 +28,6 @@ public class ReviewController {
 
     @DeleteMapping("/review/{item_id}/{review_id}/delete")
     public void delete(@PathVariable("item_id") Long itemId, @PathVariable("review_id") Long reviewId, @Login User user) {
-        reviewService.deleteReview(user, itemId, reviewId);
+        reviewService.deleteReviewFetch(user, itemId, reviewId);
     }
 }

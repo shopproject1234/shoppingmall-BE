@@ -49,18 +49,24 @@ public class ReviewService {
     }
 
     public Review updateReview(User user, Long reviewId, Long itemId, ReviewWrite reviewWrite) {
-        Item item = getItem(itemId);
-        Review review = getReview(reviewId);
-        checkMine(user, review);
-        return item.updateReview(review, reviewWrite);
+        Item item = getItemFetchReview(itemId);
+        return item.updateReview(user, reviewWrite);
     }
 
-
+    /**
+     * N+1이 발생하는 코드
+     */
     public void deleteReview(User user, Long reviewId, Long itemId) {
         Item item = getItem(itemId);
-        Review review = getReview(reviewId);
-        checkMine(user, review);
-        reviewRepository.delete(review);
+        item.deleteReview(user);
+    }
+
+    /**
+     * N+1을 해결한 코드
+     */
+    public void deleteReviewFetch(User user, Long reviewId, Long itemId) {
+        Item item = getItemFetchReview(itemId);
+        item.deleteReview(user);
     }
 
 
@@ -88,6 +94,14 @@ public class ReviewService {
         return item.get();
     }
 
+    private Item getItemFetchReview(Long itemId) {
+        Optional<Item> item = itemRepository.findItemFetchReview(itemId);
+        if (item.isEmpty()) {
+            throw new ObjectNotFoundException(getMethodName());
+        }
+        return item.get();
+    }
+
     private Review getReview(Long reviewId) {
         Optional<Review> review = reviewRepository.findById(reviewId);
         if (review.isEmpty()) {
@@ -100,12 +114,6 @@ public class ReviewService {
         Optional<History> history = historyRepository.findByUserIdAndItemId(userId, itemId);
         if (history.isEmpty()) {
             throw new ObjectNotFoundException("구매 하지 않은 상품에는 리뷰를 작성할 수 없습니다", getMethodName());
-        }
-    }
-
-    private void checkMine(User user, Review review) {
-        if (!user.equals(review.getUser())) { // 요청한 유저와 리뷰를 작성한 유저가 다른 경우
-            throw new UserValidationException(getMethodName());
         }
     }
 }

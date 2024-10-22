@@ -1,6 +1,7 @@
 package com.sangwook.shoppingmall.entity.itemaggregate.item.domain;
 
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Entity
 @Getter

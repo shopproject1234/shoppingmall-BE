@@ -14,7 +14,7 @@ public class SecurityConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173")
                 .allowedMethods("GET", "POST", "DELETE", "PATCH")
-                .allowedHeaders("*")
+                .allowedHeaders("JSESSIONID")
                 .allowCredentials(true)
                 .exposedHeaders("JSESSIONID")
                 .maxAge(3600);

@@ -16,7 +16,7 @@ import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Entity
 @Getter
-@Table(name = "Users")
+@Table(name = "Users", uniqueConstraints = @UniqueConstraint(columnNames = "email")) //이메일 제약 조건을 DB 수준에서 걸어주기
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

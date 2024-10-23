@@ -24,6 +24,7 @@ public class LoginController {
     private final EmailService emailService;
     private final RedisService redisService;
 
+    //만약 악의적인 사용자가 이메일 인증을 완료해서 code를 1로 변환시켜놓고 동시에 회원가입을 누른다면? -> 2개의 회원이 생김
     @PostMapping("/user/register")
     public void register(@RequestBody UserRegister userRegister) {
         //사용자가 이메일 확인을 받지않았다면(code != 1일 경우) 돌려보내기

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,13 +36,13 @@ public class LoginController {
     }
 
     @PostMapping("/user/login")
-    public LoginResponse login(@RequestBody UserLogin userLogin, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<LoginResponse> login(@RequestBody UserLogin userLogin, HttpServletRequest request, HttpServletResponse response) {
         User user = userService.login(userLogin);
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_USER, user);
         String sessionId = session.getId();
         response.setHeader("JSESSIONID", sessionId);
-        return new LoginResponse(user.getId(), user.getName());
+        return ResponseEntity.ok(new LoginResponse(user.getId(), user.getName()));
     }
 
     @PostMapping("/user/logout")

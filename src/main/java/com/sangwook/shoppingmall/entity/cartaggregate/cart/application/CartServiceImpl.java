@@ -66,9 +66,13 @@ public class CartServiceImpl implements CartService {
         cart.ifPresent(cartRepository::delete);
     }
 
+    /**
+     * MyCart에서 Cart 객체의 Item 정보를 가져오면서 Item에 대한 N+1문제 발생하여
+     * Item객체를 join fetch로 가져와 문제를 해결
+     */
     @Override
-    public List<MyCart> getMyCart(Long userId) { //TODO N+1 문제 발생 가능성 있음 - 테스트 필요
-        List<Cart> carts = cartRepository.findAllByUserId(userId);
+    public List<MyCart> getMyCart(Long userId) {
+        List<Cart> carts = cartRepository.findAllByUserIdFetchItem(userId);
         List<MyCart> myCart = new ArrayList<>();
         for (Cart cart : carts) {
             myCart.add(new MyCart(cart));

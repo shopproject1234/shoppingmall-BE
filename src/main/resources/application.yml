@@ -24,3 +24,4 @@ server:
         same-site: none
         http-only: false
         max-age: 30m
+        secure: on

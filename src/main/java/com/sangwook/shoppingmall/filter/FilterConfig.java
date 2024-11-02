@@ -14,7 +14,7 @@ public class FilterConfig {
 
         bean.setFilter(new CorsFilter());
         bean.setOrder(1);
-        bean.addUrlPatterns("/user/login");
+        bean.addUrlPatterns("/*");
 
         return bean;
     }

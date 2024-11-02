@@ -7,14 +7,15 @@ import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.dto.MyCart;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.domain.History;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.eventListener.ItemEvent;
 import com.sangwook.shoppingmall.exception.custom.MyItemException;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.entity.cartaggregate.cart.infra.CartRepository;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
-import com.sangwook.shoppingmall.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,7 @@ public class CartServiceImpl implements CartService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final HistoryRepository historyRepository;
-    private final EmailService emailService;
+    private final ApplicationEventPublisher publisher;
 
     //장바구니 상품 등록
     @Override
@@ -93,7 +94,7 @@ public class CartServiceImpl implements CartService {
             History history = History.purchased(cart);
             item.purchased(cart.getCount());
             if (item.getItemCount() <= 3) {
-                emailService.sendItemMail(item);
+                publisher.publishEvent(new ItemEvent(item)); //EmailService를 의존하지 않고 Event를 발생시켜 이메일 발송의 트리거가 되도록 함
             }
             historyRepository.save(history);
         }

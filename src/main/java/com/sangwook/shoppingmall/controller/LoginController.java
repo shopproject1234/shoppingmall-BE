@@ -36,12 +36,9 @@ public class LoginController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody UserLogin userLogin, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<LoginResponse> login(@RequestBody UserLogin userLogin, HttpServletRequest request) {
         User user = userService.login(userLogin);
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_USER, user);
-        String sessionId = session.getId();
-        response.setHeader("JSESSIONID", sessionId);
+        request.getSession().setAttribute(SessionConst.LOGIN_USER, user);
         return ResponseEntity.ok(new LoginResponse(user.getId(), user.getName()));
     }
 

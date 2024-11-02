@@ -188,10 +188,13 @@ public class ReviewServiceTest {
         update.setContent("상태가 별로네요");
         update.setScore(3.5f);
 
+        em.flush();
+
         System.out.println("리뷰 업데이트 시작");
         Review updated = reviewService.updateReview(newUser, review.getId(), item.getId(), update);
         System.out.println("리뷰 업데이트 종료");
 
+        //then
         assertThat(updated.getContent()).isEqualTo("상태가 별로네요");
         assertThat(updated.getScore()).isEqualTo(3.5f);
         assertThat(item.getReviewAverage()).isEqualTo(3.5f);

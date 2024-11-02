@@ -15,6 +15,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  data:
+    redis:
+      repositories:
+        enabled: false
 
 
 server:

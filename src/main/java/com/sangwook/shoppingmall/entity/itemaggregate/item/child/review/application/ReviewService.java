@@ -7,7 +7,6 @@ import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Review;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.ReviewWrite;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
-import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;

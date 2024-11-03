@@ -145,4 +145,68 @@ public class CartNPlusOneTest {
         List<MyCart> myCart = cartService.getMyCart(user.getId());
 
     }
+
+    @Test
+    @DisplayName("장바구니 최종 order - N+1 확인용 -> 발생")
+    void test3() {
+        //given
+        UserRegister userRegister = new UserRegister("taaaa@naver.com",
+                "상욱2", "123123",
+                "01011112222", "2012-11-22",
+                Gender.MALE, List.of());
+        User user = userService.register(userRegister);
+
+        AddCart addCart1 = new AddCart();
+        addCart1.setItemId(item1.getId());
+        addCart1.setItemCount(3);
+        cartService.add(user.getId(), addCart1);
+
+        AddCart addCart2 = new AddCart();
+        addCart2.setItemId(item2.getId());
+        addCart2.setItemCount(3);
+        cartService.add(user.getId(), addCart2);
+
+        AddCart addCart3 = new AddCart();
+        addCart3.setItemId(item3.getId());
+        addCart3.setItemCount(3);
+        cartService.add(user.getId(), addCart3);
+
+        em.flush();
+        em.clear();
+
+        //when
+        cartService.orderNPlusOne(user.getId());
+    }
+
+    @Test
+    @DisplayName("장바구니 최종 order - N+1 해결")
+    void test4() {
+        //given
+        UserRegister userRegister = new UserRegister("taaaa@naver.com",
+                "상욱2", "123123",
+                "01011112222", "2012-11-22",
+                Gender.MALE, List.of());
+        User user = userService.register(userRegister);
+
+        AddCart addCart1 = new AddCart();
+        addCart1.setItemId(item1.getId());
+        addCart1.setItemCount(3);
+        cartService.add(user.getId(), addCart1);
+
+        AddCart addCart2 = new AddCart();
+        addCart2.setItemId(item2.getId());
+        addCart2.setItemCount(3);
+        cartService.add(user.getId(), addCart2);
+
+        AddCart addCart3 = new AddCart();
+        addCart3.setItemId(item3.getId());
+        addCart3.setItemCount(3);
+        cartService.add(user.getId(), addCart3);
+
+        em.flush();
+        em.clear();
+
+        //when
+        cartService.order(user.getId());
+    }
 }

@@ -89,6 +89,30 @@ public class FakeCartService implements CartService {
 
     @Override
     public void order(Long userId) {
+        List<Cart> carts = cartRepository.findAllByUserIdFetchItem(userId);
+        for (Cart cart : carts) {
+            //주문 시에도 상품의 수를 재확인, 주문하려는 수량보다 재고가 적게 남은 경우 예외처리
+            //구매 성공시 상품의 수량을 줄인다
+            Item item = cart.getItem(); //카트에 담긴 아이템 만큼 N+1 문제 가능성
+            if (item.getItemCount() < cart.getCount()) {
+                throw new IllegalStateException();
+            }
+            History history = History.purchased(cart);
+            item.purchased(cart.getCount());
+            if (item.getItemCount() <= 3) {
+                emailService.sendItemMail(item);
+            }
+            historyRepository.save(history);
+        }
+        cartRepository.deleteAll(carts);
+    }
+
+    /**
+     * Cart에서 getItem을 하면서 N + 1발생
+     * order의 기존코드였고, Test코드에서만 사용한다
+     */
+    @Deprecated
+    public void orderNPlusOne(Long userId) {
         List<Cart> carts = cartRepository.findAllByUserId(userId);
         for (Cart cart : carts) {
             //주문 시에도 상품의 수를 재확인, 주문하려는 수량보다 재고가 적게 남은 경우 예외처리

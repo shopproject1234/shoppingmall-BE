@@ -82,12 +82,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void order(Long userId) { //FIXME order메서드에서 주문시 item의 수량 줄여야함 N+1 문제 조심
-        List<Cart> carts = cartRepository.findAllByUserId(userId);
+    public void order(Long userId) {
+        List<Cart> carts = cartRepository.findAllByUserIdFetchItem(userId); //N+1 발생하여 Item까지 같이 fetch join
         for (Cart cart : carts) {
             //주문 시에도 상품의 수를 재확인, 주문하려는 수량보다 재고가 적게 남은 경우 예외처리
             //구매 성공시 상품의 수량을 줄인다
-            Item item = cart.getItem(); //카트에 담긴 아이템 만큼 N+1 문제 가능성
+            Item item = cart.getItem();
             if (item.getItemCount() < cart.getCount()) {
                 throw new IllegalStateException(); //FIXME
             }

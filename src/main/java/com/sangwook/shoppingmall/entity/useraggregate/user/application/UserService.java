@@ -104,7 +104,7 @@ public class UserService {
     private void emailCheck(String email) {
         Optional<User> getUser = userRepository.findByEmail(email);
         if (getUser.isPresent()) { // 이미 해당 이메일을 가진 유저가 존재하는 경우
-            throw new UserValidationException("해당 이메일의 유저는 이미 존재합니다", getMethodName());
+            throw new UserValidationException("해당 유저는 이미 존재합니다", getMethodName());
         }
     }
 

@@ -16,6 +16,7 @@ import com.sangwook.shoppingmall.entity.cartaggregate.cart.infra.CartRepository;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserRegister;
 import com.sangwook.shoppingmall.exception.custom.MyItemException;
+import com.sangwook.shoppingmall.exception.custom.QuantityNotEnoughException;
 import com.sangwook.shoppingmall.service.fake.FakeCartService;
 import com.sangwook.shoppingmall.service.fake.FakeEmailService;
 import org.junit.jupiter.api.BeforeEach;
@@ -133,7 +134,7 @@ public class CartServiceTest {
         AddCart addCart = new AddCart();
         addCart.setItemId(item.getId());
         addCart.setItemCount(4); //재고가 3인 상품을 4개나 담으려고 하는 경우
-        assertThatThrownBy(() -> cartService.add(user.getId(), addCart)).isInstanceOf(IllegalStateException.class); //FIXME 예외처리 후 수정 필요
+        assertThatThrownBy(() -> cartService.add(user.getId(), addCart)).isInstanceOf(QuantityNotEnoughException.class);
     }
 
     @Test

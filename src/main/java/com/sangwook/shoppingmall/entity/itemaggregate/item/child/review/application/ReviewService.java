@@ -6,6 +6,7 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Review;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.ReviewWrite;
+import com.sangwook.shoppingmall.exception.custom.ObjectAlreadyExistException;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
@@ -39,7 +40,7 @@ public class ReviewService {
         // 조회만을 위한 repository 사용은 ddd의 개념에 위배되지 않는다 (Item 객체 내부의 List<Review>에서 탐색하는 것보다 효율적)
         Optional<Review> review = reviewRepository.findByItemIdAndUserId(itemId, userId);
         if (review.isPresent()) {
-            throw new IllegalStateException(); //FIXME
+            throw new ObjectAlreadyExistException("리뷰가 이미 존재합니다", getMethodName());
         }
 
         User user = getUser(userId);

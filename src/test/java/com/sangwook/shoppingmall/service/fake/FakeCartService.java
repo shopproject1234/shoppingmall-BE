@@ -14,6 +14,7 @@ import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.exception.custom.MyItemException;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
+import com.sangwook.shoppingmall.exception.custom.QuantityNotEnoughException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,7 @@ public class FakeCartService implements CartService {
 
         //카트에 담으려는 상품의 수보다 남은 상품의 재고가 적은 경우
         if (item.getItemCount() < addCart.getItemCount()) {
-            throw new IllegalStateException();
+            throw new QuantityNotEnoughException("상품의 재고가 부족합니다");
         }
         Cart newCart = Cart.add(user, item, addCart.getItemCount());
         return cartRepository.save(newCart);

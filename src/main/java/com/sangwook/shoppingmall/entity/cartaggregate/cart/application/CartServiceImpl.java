@@ -9,11 +9,13 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.eventListener.ItemEvent;
 import com.sangwook.shoppingmall.exception.custom.MyItemException;
+import com.sangwook.shoppingmall.exception.custom.ObjectAlreadyExistException;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.entity.cartaggregate.cart.infra.CartRepository;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
+import com.sangwook.shoppingmall.exception.custom.QuantityNotEnoughException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
@@ -50,12 +52,12 @@ public class CartServiceImpl implements CartService {
 
         Optional<Cart> cart = getCart(userId, addCart.getItemId());
         if (cart.isPresent()) { //이미 장바구니에 해당 상품이 존재할 경우 예외 처리
-            throw new IllegalStateException(); //FIXME
+            throw new ObjectAlreadyExistException("상품이 이미 존재합니다", getMethodName());
         }
 
         //카트에 담으려는 상품의 수보다 남은 상품의 재고가 적은 경우
         if (item.getItemCount() < addCart.getItemCount()) {
-            throw new IllegalStateException(); //FIXME
+            throw new QuantityNotEnoughException("상품의 재고가 충분하지 않습니다");
         }
         Cart newCart = Cart.add(user, item, addCart.getItemCount());
         return cartRepository.save(newCart);
@@ -89,7 +91,7 @@ public class CartServiceImpl implements CartService {
             //구매 성공시 상품의 수량을 줄인다
             Item item = cart.getItem();
             if (item.getItemCount() < cart.getCount()) {
-                throw new IllegalStateException(); //FIXME
+                throw new QuantityNotEnoughException("상품의 재고가 충분하지 않습니다");
             }
             History history = History.purchased(cart);
             item.purchased(cart.getCount());

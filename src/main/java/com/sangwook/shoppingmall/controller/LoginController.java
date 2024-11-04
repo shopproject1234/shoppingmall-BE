@@ -4,6 +4,7 @@ import com.sangwook.shoppingmall.argumentResolver.Login;
 import com.sangwook.shoppingmall.constant.SessionConst;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.*;
+import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.service.EmailService;
 import com.sangwook.shoppingmall.service.RedisService;
 import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -24,12 +27,15 @@ public class LoginController {
     private final EmailService emailService;
     private final RedisService redisService;
 
-    //만약 악의적인 사용자가 이메일 인증을 완료해서 code를 1로 변환시켜놓고 동시에 회원가입을 누른다면? -> 2개의 회원이 생김
+    /**
+     * 만약 악의적인 사용자가 이메일 인증을 완료해서 code를 1로 변환시켜놓고 동시에 회원가입을 누른다면? -> 2개의 회원이 생김
+     * email을 unique 제약 조건을 걸어 해결
+     */
     @PostMapping("/user/register")
     public void register(@RequestBody UserRegister userRegister) {
         //사용자가 이메일 확인을 받지않았다면(code != 1일 경우) 돌려보내기
         if (!redisService.getCode(userRegister.getEmail()).equals(1)) {
-            throw new IllegalStateException();//FIXME
+            throw new UserValidationException("이메일이 인증되지 않았습니다", getMethodName());
         }
         userService.register(userRegister);
     }
@@ -51,7 +57,7 @@ public class LoginController {
     public void sendEmail(@RequestBody EmailCheck check) {
         if (userService.checkUserExist(check.getEmail())) {
             //해당 유저가 이미 존재하는 경우
-            throw new IllegalStateException(); //FIXME
+            throw new UserValidationException("해당 유저는 이미 존재합니다", getMethodName());
         }
         emailService.sendVerifyMail(check.getEmail());
     }

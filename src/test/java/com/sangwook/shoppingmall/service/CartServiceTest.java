@@ -210,6 +210,7 @@ public class CartServiceTest {
 
         //then
         assertThat(cartRepository.findAllByUserId(user.getId())).isEmpty();
+        assertThat(item.getItemCount()).isEqualTo(0);
     }
 
     @Test

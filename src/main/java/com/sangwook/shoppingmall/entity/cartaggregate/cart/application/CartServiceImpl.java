@@ -93,8 +93,8 @@ public class CartServiceImpl implements CartService {
             if (item.getItemCount() < cart.getCount()) {
                 throw new QuantityNotEnoughException("상품의 재고가 충분하지 않습니다");
             }
-            History history = History.purchased(cart);
             item.purchased(cart.getCount());
+            History history = History.purchased(cart);
             if (item.getItemCount() <= 3) {
                 publisher.publishEvent(new ItemEvent(item)); //EmailService를 의존하지 않고 Event를 발생시켜 이메일 발송의 트리거가 되도록 함
             }

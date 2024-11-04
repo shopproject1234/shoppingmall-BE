@@ -2,9 +2,12 @@ package com.sangwook.shoppingmall.exception;
 
 import com.sangwook.shoppingmall.exception.custom.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.concurrent.ExecutionException;
 
 @RestControllerAdvice
 public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
@@ -55,4 +58,15 @@ public class GlobalExceptionAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(400).body(error);
     }
 
+    @ExceptionHandler(ExecutionException.class)
+    public ResponseEntity<ErrorResponse> handleExecutionException(ExecutionException e) {
+        Throwable cause = e.getCause();
+        if (cause instanceof ObjectOptimisticLockingFailureException) { // 낙관적 락, 동시성 문제 발생
+            ErrorResponse error = ErrorResponse.error("잠시 후 다시 시도해주세요");
+            return ResponseEntity.status(400).body(error);
+        }
+        else {
+            return ResponseEntity.status(500).body(ErrorResponse.error("서버 오류가 발생하였습니다"));
+        }
+    }
 }

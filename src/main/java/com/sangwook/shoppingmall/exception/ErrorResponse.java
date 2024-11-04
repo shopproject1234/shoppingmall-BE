@@ -21,4 +21,12 @@ public class ErrorResponse {
         return errorResponse;
     }
 
+    public static ErrorResponse error(String message) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(message);
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setPath(null);
+        return errorResponse;
+    }
+
 }

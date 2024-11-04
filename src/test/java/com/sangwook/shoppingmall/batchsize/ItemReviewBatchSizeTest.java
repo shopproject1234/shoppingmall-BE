@@ -31,6 +31,19 @@ import java.util.List;
 @ActiveProfiles("test")
 public class ItemReviewBatchSizeTest {
 
+    /**
+     * 잘못된 테스트 코드, OneToMany 관계에서 N+1일 문제가 발생하는 경우는 여러개의 Item에 소속된 여러개의 Review를
+     * 조회할 때 발생한다 하지만 review를 삭제하고, review를 수정하는 코드에서는 Item 객체가 1개로 고정되어 있는 상태에서
+     * Review 탐색을 진행하므로 Item 객체 내부의 reviews 컬렉션에 대해서만 1번의 쿼리가 더 나갈 뿐 N+1 문제와는 무관하다
+     * 그렇기에 @BatchSize를 적용하는 것 자체가 의미가 없다
+     *
+     * 적절하게 적용하려면?
+     * 만약 Item 객체를 20개 불러온다고 가정해보면
+     * 각각의 Item에 대한 실제 review를 가져오려면 Item이 20개이므로 총 20번의 쿼리가 나가게 된다
+     * 이런 경우에 BatchSize를 사용한다
+     * SELECT * FROM Review WHERE item_id IN (1, 2, 3, ..., 10);와 같이 in 절을 사용하여 쿼리의 수를 줄이게된다
+     */
+
     User user;
     Item item;
 
@@ -92,8 +105,6 @@ public class ItemReviewBatchSizeTest {
                 Gender.MALE, List.of()));
 
     }
-
-    //TODO BatchSize 적용 필요
 
     /**
      * 해당 테스트의 내용은 노션에 작성됨

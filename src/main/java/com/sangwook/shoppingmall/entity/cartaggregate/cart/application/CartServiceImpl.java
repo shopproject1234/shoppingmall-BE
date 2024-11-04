@@ -86,6 +86,9 @@ public class CartServiceImpl implements CartService {
     @Override
     public void order(Long userId) {
         List<Cart> carts = cartRepository.findAllByUserIdFetchItem(userId); //N+1 발생하여 Item까지 같이 fetch join
+        if (carts.isEmpty()) {
+            throw new ObjectNotFoundException("장바구니에 상품이 없습니다", getMethodName());
+        }
         for (Cart cart : carts) {
             //주문 시에도 상품의 수를 재확인, 주문하려는 수량보다 재고가 적게 남은 경우 예외처리
             //구매 성공시 상품의 수량을 줄인다

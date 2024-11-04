@@ -14,6 +14,7 @@ import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserServi
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.infra.ReviewRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserRegister;
+import com.sangwook.shoppingmall.exception.custom.ObjectAlreadyExistException;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.service.fake.FakeCartService;
 import jakarta.persistence.EntityManager;
@@ -134,7 +135,7 @@ public class ReviewServiceTest {
         //when
         Review review = reviewService.reviewWrite(newUser.getId(), item.getId(), reviewWrite1);
         // 리뷰를 1개 더 추가
-        assertThatThrownBy(() -> reviewService.reviewWrite(newUser.getId(), item.getId(), reviewWrite2)).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> reviewService.reviewWrite(newUser.getId(), item.getId(), reviewWrite2)).isInstanceOf(ObjectAlreadyExistException.class);
     }
 
     @Test

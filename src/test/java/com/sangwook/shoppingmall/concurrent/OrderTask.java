@@ -7,12 +7,10 @@ public class OrderTask implements Runnable {
 
     CartService cartService;
     Long customerId;
-    AddCart addCart;
 
-    public OrderTask(CartService cartService, Long customerId, AddCart addCart) {
+    public OrderTask(CartService cartService, Long customerId) {
         this.cartService = cartService;
         this.customerId = customerId;
-        this.addCart = addCart;
     }
 
     @Override

@@ -44,6 +44,9 @@ public class Item {
 
     private LocalDateTime time;
 
+    @Version
+    private Long version;
+
     @Column(length = 1000)
     private String itemInfo;
 

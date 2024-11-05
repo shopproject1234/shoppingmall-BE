@@ -1,11 +1,11 @@
 package com.sangwook.shoppingmall.concurrent;
 
 import com.sangwook.shoppingmall.entity.itemaggregate.item.application.ItemService;
-import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
 import com.sangwook.shoppingmall.service.fake.FakeCartService;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +39,9 @@ public class OrderConcurrentTest {
     @Autowired
     ItemRepository itemRepository;
 
+    @Autowired
+    CleanUp cleanUp;
+
     /**
      * 상품주문에서의 동시성 문제 발생
      * 테스트 설명 : 수량이 3인 상품에 대해서 사용자 1이 2개 주문, 사용자 2가 2개 주문을 동시에 진행한다
@@ -68,5 +71,10 @@ public class OrderConcurrentTest {
             assertThat(throwable.getCause()).isInstanceOf(ObjectOptimisticLockingFailureException.class);
         }
 
+    }
+
+    @AfterEach
+    void tearDown() {
+        cleanUp.execute();
     }
 }

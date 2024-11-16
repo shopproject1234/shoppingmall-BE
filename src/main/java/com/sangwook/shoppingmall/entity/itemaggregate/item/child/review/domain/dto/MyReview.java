@@ -1,5 +1,6 @@
 package com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto;
 
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Review;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,13 +13,13 @@ public class MyReview {
     private Long itemId;
     private LocalDateTime time;
     private String content;
-    private Integer score;
+    private Float score;
 
-    public MyReview(Long itemId, LocalDateTime time, String content, Integer score) {
-        this.itemId = itemId;
-        this.time = time;
-        this.content = content;
-        this.score = score;
+    public MyReview(Review review) {
+        this.itemId = review.getItem().getId();
+        this.time = review.getTime();
+        this.content = review.getContent();
+        this.score = review.getScore();
     }
 
     public MyReview() {

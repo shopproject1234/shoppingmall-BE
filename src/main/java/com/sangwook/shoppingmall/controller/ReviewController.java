@@ -8,6 +8,7 @@ import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.application.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,5 +30,11 @@ public class ReviewController {
     @DeleteMapping("/review/{item_id}/{review_id}/delete")
     public void delete(@PathVariable("item_id") Long itemId, @PathVariable("review_id") Long reviewId, @Login User user) {
         reviewService.deleteReviewFetch(user, itemId, reviewId);
+    }
+
+    @GetMapping("/review/{item_id}")
+    public ResponseEntity<Page<ReviewList>> list(@PathVariable("item_id") Long itemId, @RequestParam(defaultValue = "1", required = false) int page) {
+        Page<ReviewList> list = reviewService.getList(itemId, page);
+        return ResponseEntity.ok(list);
     }
 }

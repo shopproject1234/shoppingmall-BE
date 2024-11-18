@@ -156,7 +156,7 @@ public class ReviewServiceTest {
         Review review = reviewService.reviewWrite(newUser.getId(), item.getId(), reviewWrite);
 
         //when
-        Page<ReviewList> getList = reviewService.findReview(item.getId(), 1);
+        Page<ReviewList> getList = reviewService.getList(item.getId(), 1);
 
         //then
         assertThat(getList.getNumberOfElements()).isEqualTo(1);

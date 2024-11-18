@@ -10,10 +10,7 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.MyItem;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.Interest;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.PassCheck;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserInfo;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserLogin;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserRegister;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.*;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
@@ -90,6 +87,12 @@ public class UserService {
         Optional<User> getUser = userRepository.findByEmail(email);
         return getUser.isPresent();
     }
+
+    public Boolean validEmail(EmailValid emailValid) {
+        Optional<User> getUser = userRepository.findByEmail(emailValid.getEmail());
+        return getUser.isEmpty();
+    }
+
     /**
      * MyPage
      */

@@ -2,12 +2,15 @@ package com.sangwook.shoppingmall.entity.useraggregate.user.application;
 
 import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.constant.Preference;
+import com.sangwook.shoppingmall.entity.historyaggregate.history.domain.dto.MyPurchase;
+import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.domain.dto.MyReview;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.child.review.infra.ReviewRepository;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.MyItem;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.Interest;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.PassCheck;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserInfo;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserLogin;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserRegister;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.*;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
@@ -29,6 +32,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final ItemRepository itemRepository;
+    private final HistoryRepository historyRepository;
+    private final ReviewRepository reviewRepository;
 
     public User register(UserRegister userRegister) {
         emailCheck(userRegister.getEmail());
@@ -82,6 +88,26 @@ public class UserService {
         return getUser.isPresent();
     }
 
+    public Boolean validEmail(EmailValid emailValid) {
+        Optional<User> getUser = userRepository.findByEmail(emailValid.getEmail());
+        return getUser.isEmpty();
+    }
+
+    /**
+     * MyPage
+     */
+    public List<MyItem> getMyItems(Long userId) {
+        return itemRepository.findMyItems(userId);
+    }
+
+    public List<MyPurchase> getMyPurchases(Long userId) {
+        return historyRepository.findMyPurchases(userId);
+    }
+
+    public List<MyReview> getMyReviews(Long userId) {
+        return reviewRepository.findMyReviews(userId);
+    }
+
     /**
      * private method
      */
@@ -107,5 +133,4 @@ public class UserService {
             throw new UserValidationException("해당 유저는 이미 존재합니다", getMethodName());
         }
     }
-
 }

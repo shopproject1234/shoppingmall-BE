@@ -71,7 +71,7 @@ public class ReviewService {
     }
 
 
-    public Page<ReviewList> findReview(Long itemId, int page) {
+    public Page<ReviewList> getList(Long itemId, int page) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         return reviewRepository.getList(itemId, pageRequest);
     }

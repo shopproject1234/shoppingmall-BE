@@ -5,11 +5,12 @@ import com.sangwook.shoppingmall.constant.Category;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ItemList {
+public class ItemList implements Serializable {
 
     private Long itemId;
     private String itemName;

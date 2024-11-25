@@ -17,6 +17,7 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.exception.custom.QuantityNotEnoughException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,7 @@ public class CartServiceImpl implements CartService {
         return myCart;
     }
 
+    @CacheEvict(value = "itemListCache", allEntries = true)
     @Override
     public void order(Long userId) {
         List<Cart> carts = cartRepository.findAllByUserIdFetchItem(userId); //N+1 발생하여 Item까지 같이 fetch join

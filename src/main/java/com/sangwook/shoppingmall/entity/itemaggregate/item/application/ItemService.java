@@ -12,6 +12,8 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.child.itemImage.infra
 import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ImageRepository imageRepository;
 
+    @CacheEvict(value = "itemListCache", allEntries = true)
     public Item add(User user, AddItem addItem) {
         Item item = Item.add(addItem, user);
         item.addImage(addItem.getImage());
@@ -38,12 +41,14 @@ public class ItemService {
         return item;
     }
 
+    @CacheEvict(value = "itemListCache", allEntries = true)
     public void delete(User user, Long itemId) {
         Item item = getItem(itemId);
         checkMine(user, item);
         itemRepository.delete(item);
     }
 
+    @CacheEvict(value = "itemListCache", allEntries = true)
     public Item update(User user, Long itemId, AddItem addItem) {
         Item item = getItem(itemId);
         checkMine(user, item);
@@ -60,6 +65,8 @@ public class ItemService {
         return new ItemInfo(item, image);
     }
 
+    @Cacheable(value = "itemListCache", key = "#page", //페이지별 캐싱
+            condition = "#sortType == 'latest' && #keyword == null && #category == null")
     public Page<ItemList> getList(int page, String sortType, String keyword, String category) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         return itemRepository.findAllBySortType(sortType, keyword, category, pageRequest);

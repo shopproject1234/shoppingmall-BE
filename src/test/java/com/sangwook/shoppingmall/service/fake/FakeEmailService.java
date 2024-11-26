@@ -1,9 +1,9 @@
 package com.sangwook.shoppingmall.service.fake;
 
-import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.EmailCheck;
+import com.sangwook.shoppingmall.entity.itemaggregate.domain.Item;
+import com.sangwook.shoppingmall.entity.useraggregate.user.dto.EmailCheck;
 import com.sangwook.shoppingmall.exception.custom.EmailSendException;
-import com.sangwook.shoppingmall.service.EmailService;
+import com.sangwook.shoppingmall.application.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.AddressException;
 import org.springframework.stereotype.Service;

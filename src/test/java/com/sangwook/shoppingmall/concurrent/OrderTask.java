@@ -1,7 +1,6 @@
 package com.sangwook.shoppingmall.concurrent;
 
-import com.sangwook.shoppingmall.entity.cartaggregate.cart.application.CartService;
-import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.dto.AddCart;
+import com.sangwook.shoppingmall.application.CartService;
 
 public class OrderTask implements Runnable {
 

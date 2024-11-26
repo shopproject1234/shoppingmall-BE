@@ -1,6 +1,6 @@
 package com.sangwook.shoppingmall.entity.cartaggregate.cart.infra;
 
-import com.sangwook.shoppingmall.entity.cartaggregate.cart.domain.Cart;
+import com.sangwook.shoppingmall.entity.cartaggregate.domain.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

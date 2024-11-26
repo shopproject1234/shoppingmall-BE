@@ -1,20 +1,27 @@
 package com.sangwook.shoppingmall.concurrent;
 
-import com.sangwook.shoppingmall.entity.itemaggregate.item.application.ItemService;
+import com.sangwook.shoppingmall.application.ItemService;
+import com.sangwook.shoppingmall.common.constant.Category;
+import com.sangwook.shoppingmall.common.constant.Gender;
+import com.sangwook.shoppingmall.entity.cartaggregate.cart.dto.AddCart;
+import com.sangwook.shoppingmall.entity.itemaggregate.domain.Item;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.AddItem;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.infra.ItemRepository;
-import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
+import com.sangwook.shoppingmall.application.UserService;
+import com.sangwook.shoppingmall.entity.useraggregate.domain.User;
+import com.sangwook.shoppingmall.entity.useraggregate.user.dto.UserRegister;
 import com.sangwook.shoppingmall.service.fake.FakeCartService;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,9 +30,7 @@ import java.util.concurrent.Future;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@ActiveProfiles({"test", "orderTest"})
-@AutoConfigureMockMvc
-@Transactional
+@ActiveProfiles("test")
 public class OrderConcurrentTest {
 
     @Autowired
@@ -34,13 +39,59 @@ public class OrderConcurrentTest {
     UserService userService;
     @Autowired
     ItemService itemService;
-    @Autowired EntityManager em;
 
     @Autowired
     ItemRepository itemRepository;
 
     @Autowired
     CleanUp cleanUp;
+
+    User user;
+    Item item;
+    Long customer1Id;
+    Long customer2Id;
+
+    @Transactional
+    @BeforeEach
+    void set() {
+        UserRegister userRegister = new UserRegister("tkddnr@naver.com",
+                "상욱", "123123",
+                "01011112222", "2012-11-22",
+                Gender.MALE, List.of());
+        user = userService.register(userRegister);
+
+        AddItem addItem = new AddItem();
+        addItem.setItemName("장롱");
+        addItem.setItemCount(3);
+        addItem.setItemInfo("장롱입니다 매우 상태가 좋습니다");
+        addItem.setCategory(Category.FURNITURE);
+        addItem.setPrice(1_000_000);
+        List<String> image = List.of("imageLink1", "imageLink2", "imageLink3");
+        addItem.setImage(image);
+        item = itemService.add(user, addItem);
+
+        UserRegister userRegister2 = new UserRegister("taaaa141414@naver.com",
+                "상욱2", "123123",
+                "01011112222", "2012-11-22",
+                Gender.MALE, List.of());
+        User customer1 = userService.register(userRegister2);
+
+        User customer2 = userService.register(new UserRegister("tatata123123@naver.com",
+                "상욱3", "123123",
+                "01011112222", "2012-11-22",
+                Gender.MALE, List.of()));
+
+        //상품은 3개인데 2개 2개씩 사용자가 카트에 추가하여 주문한다
+        AddCart addCart = new AddCart();
+        addCart.setItemId(item.getId());
+        addCart.setItemCount(2);
+
+        customer1Id = customer1.getId();
+        customer2Id = customer2.getId();
+
+        cartService.add(customer1.getId(), addCart);
+        cartService.add(customer2.getId(), addCart);
+    }
 
     /**
      * 상품주문에서의 동시성 문제 발생
@@ -57,8 +108,8 @@ public class OrderConcurrentTest {
         //when
         ExecutorService es = Executors.newFixedThreadPool(2);
 
-        OrderTask task1 = new OrderTask(cartService, 2L);
-        OrderTask task2 = new OrderTask(cartService, 3L);
+        OrderTask task1 = new OrderTask(cartService, customer1Id);
+        OrderTask task2 = new OrderTask(cartService, customer2Id);
 
         Future<?> future1 = es.submit(task1);
         Future<?> future2 = es.submit(task2);
@@ -69,6 +120,8 @@ public class OrderConcurrentTest {
         } catch (Throwable throwable) {
             assertThat(throwable).isInstanceOf(ExecutionException.class);
             assertThat(throwable.getCause()).isInstanceOf(ObjectOptimisticLockingFailureException.class);
+        } finally {
+            es.shutdown();
         }
 
     }

@@ -1,8 +1,8 @@
 package com.sangwook.shoppingmall.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sangwook.shoppingmall.argumentResolver.LoginArgumentResolver;
-import com.sangwook.shoppingmall.interceptor.LoginInterceptor;
+import com.sangwook.shoppingmall.common.argumentResolver.LoginArgumentResolver;
+import com.sangwook.shoppingmall.common.interceptor.LoginInterceptor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.context.annotation.Bean;

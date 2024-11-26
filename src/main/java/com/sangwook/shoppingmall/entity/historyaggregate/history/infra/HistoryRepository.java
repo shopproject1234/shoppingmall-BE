@@ -1,7 +1,7 @@
 package com.sangwook.shoppingmall.entity.historyaggregate.history.infra;
 
-import com.sangwook.shoppingmall.entity.historyaggregate.history.domain.History;
-import com.sangwook.shoppingmall.entity.historyaggregate.history.domain.dto.MyPurchase;
+import com.sangwook.shoppingmall.entity.historyaggregate.domain.History;
+import com.sangwook.shoppingmall.entity.historyaggregate.history.dto.MyPurchase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,6 +14,6 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
 
     Optional<History> findByUserIdAndItemId(Long userId, Long itemId);
 
-    @Query("select new com.sangwook.shoppingmall.entity.historyaggregate.history.domain.dto.MyPurchase(h) from History h join fetch h.item where h.user.id=:userId order by h.date desc")
+    @Query("select new com.sangwook.shoppingmall.entity.historyaggregate.history.dto.MyPurchase(h) from History h join fetch h.item where h.user.id=:userId order by h.date desc")
     List<MyPurchase> findMyPurchases(Long userId);
 }

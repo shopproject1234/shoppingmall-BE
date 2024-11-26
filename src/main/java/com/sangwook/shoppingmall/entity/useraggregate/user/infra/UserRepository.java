@@ -1,6 +1,6 @@
 package com.sangwook.shoppingmall.entity.useraggregate.user.infra;
 
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.entity.useraggregate.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

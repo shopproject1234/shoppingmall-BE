@@ -3,9 +3,9 @@ package com.sangwook.shoppingmall.entity.itemaggregate.item.infra;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sangwook.shoppingmall.constant.Category;
-import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemList;
-import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.QItemList;
+import com.sangwook.shoppingmall.common.constant.Category;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.ItemList;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.QItemList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.sangwook.shoppingmall.entity.itemaggregate.item.domain.QItemImage.itemImage;
-import static com.sangwook.shoppingmall.entity.itemaggregate.item.domain.QItem.item;
-import static com.sangwook.shoppingmall.entity.useraggregate.user.domain.QUser.user;
+import static com.sangwook.shoppingmall.entity.itemaggregate.domain.QItem.item;
+import static com.sangwook.shoppingmall.entity.itemaggregate.domain.QItemImage.itemImage;
+import static com.sangwook.shoppingmall.entity.useraggregate.domain.QUser.user;
 
 
 @RequiredArgsConstructor

@@ -1,13 +1,13 @@
 package com.sangwook.shoppingmall.service;
 
-import com.sangwook.shoppingmall.constant.Category;
-import com.sangwook.shoppingmall.constant.Gender;
-import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
-import com.sangwook.shoppingmall.entity.useraggregate.user.child.interest.infra.InterestRepository;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.Interest;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserInfo;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.UserRegister;
+import com.sangwook.shoppingmall.common.constant.Category;
+import com.sangwook.shoppingmall.common.constant.Gender;
+import com.sangwook.shoppingmall.application.UserService;
+import com.sangwook.shoppingmall.entity.useraggregate.interest.infra.InterestRepository;
+import com.sangwook.shoppingmall.entity.useraggregate.domain.Interest;
+import com.sangwook.shoppingmall.entity.useraggregate.domain.User;
+import com.sangwook.shoppingmall.entity.useraggregate.user.dto.UserInfo;
+import com.sangwook.shoppingmall.entity.useraggregate.user.dto.UserRegister;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.service.fake.FakeEmailService;
 import org.junit.jupiter.api.BeforeEach;

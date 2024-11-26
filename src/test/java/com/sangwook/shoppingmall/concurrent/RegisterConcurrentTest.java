@@ -1,7 +1,7 @@
 package com.sangwook.shoppingmall.concurrent;
 
-import com.sangwook.shoppingmall.entity.useraggregate.user.application.UserService;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.application.UserService;
+import com.sangwook.shoppingmall.entity.useraggregate.domain.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,6 @@ import java.util.concurrent.Future;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureMockMvc
 @SpringBootTest
 @ActiveProfiles("test")
 public class RegisterConcurrentTest {
@@ -45,6 +44,8 @@ public class RegisterConcurrentTest {
             User user2 = future2.get();
         } catch (Throwable throwable) {
             assertThat(throwable).isInstanceOf(ExecutionException.class);
+        } finally {
+            es.shutdown();
         }
 
 

@@ -65,8 +65,12 @@ public class ItemService {
     /**
      * 조회만을 위해 repository에서 직접 하는 것은 DDD의 개념에 위배되지 않음
      */
-    public ItemInfo getInfo(Long itemId) {
+    public ItemInfo getInfo(Long itemId, User user) {
         Item item = getItem(itemId);
+        if (user != null) {
+            User getUser = getUserFetchInterest(user.getId());
+            getUser.plusScale(item.getCategory(), 2);
+        }
         List<ItemImage> image = imageRepository.findByItemId(itemId);
         return new ItemInfo(item, image);
     }
@@ -76,13 +80,9 @@ public class ItemService {
     public Page<ItemList> getList(int page, String sortType, String keyword, String category, User user) {
         //키워드 검색 시 가중치에 반영
         if (keyword != null && user != null) {
-            Long id = user.getId();
-            User getUser = getUserFetchInterest(id);
+            User getUser = getUserFetchInterest(user.getId());
             Optional<Category> mostFrequentCategory = itemRepository.findMostFrequentCategory(keyword);
-            if (mostFrequentCategory.isPresent()) {
-                Interest interest = getUser.plusScale(mostFrequentCategory.get(), 1);
-                interestRepository.save(interest);
-            }
+            mostFrequentCategory.ifPresent(value -> getUser.plusScale(value, 1));
         }
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         return itemRepository.findAllBySortType(sortType, keyword, category, pageRequest);

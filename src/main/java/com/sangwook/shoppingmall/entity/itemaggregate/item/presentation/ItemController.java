@@ -1,6 +1,7 @@
 package com.sangwook.shoppingmall.entity.itemaggregate.item.presentation;
 
 import com.sangwook.shoppingmall.argumentResolver.Login;
+import com.sangwook.shoppingmall.argumentResolver.UserForScale;
 import com.sangwook.shoppingmall.constant.SessionConst;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.application.ItemService;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.AddItem;
@@ -38,8 +39,8 @@ public class ItemController {
     }
 
     @GetMapping("/item/{item_id}/info")
-    public ItemInfo itemInfo(@PathVariable("item_id") Long itemId) {
-        return itemService.getInfo(itemId);
+    public ItemInfo itemInfo(@PathVariable("item_id") Long itemId, @UserForScale User user) {
+        return itemService.getInfo(itemId, user);
     }
 
     @GetMapping("/item/list")
@@ -47,14 +48,8 @@ public class ItemController {
                                    @RequestParam String sortType,
                                    @RequestParam(required = false) String keyword,
                                    @RequestParam(required = false) String category,
-                                   HttpServletRequest request) {
-        User user;
-        HttpSession session = request.getSession(false);
-        if (session == null) {
-            user = null;
-        } else {
-            user = (User) session.getAttribute(SessionConst.LOGIN_USER);
-        }
+                                   @UserForScale User user) {
+
         return itemService.getList(page, sortType, keyword, category, user);
     }
 }

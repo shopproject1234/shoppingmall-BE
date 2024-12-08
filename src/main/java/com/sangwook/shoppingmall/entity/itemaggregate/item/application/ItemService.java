@@ -7,7 +7,6 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemInfo;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.ItemImage;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemList;
 import com.sangwook.shoppingmall.entity.useraggregate.user.child.interest.infra.InterestRepository;
-import com.sangwook.shoppingmall.entity.useraggregate.user.domain.Interest;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
@@ -26,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.sangwook.shoppingmall.constant.Scale.INFO;
+import static com.sangwook.shoppingmall.constant.Scale.SEARCH;
 import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Service
@@ -69,7 +70,7 @@ public class ItemService {
         Item item = getItem(itemId);
         if (user != null) {
             User getUser = getUserFetchInterest(user.getId());
-            getUser.plusScale(item.getCategory(), 2);
+            getUser.plusScale(item.getCategory(), INFO.getValue());
         }
         List<ItemImage> image = imageRepository.findByItemId(itemId);
         return new ItemInfo(item, image);
@@ -82,7 +83,7 @@ public class ItemService {
         if (keyword != null && user != null) {
             User getUser = getUserFetchInterest(user.getId());
             Optional<Category> mostFrequentCategory = itemRepository.findMostFrequentCategory(keyword);
-            mostFrequentCategory.ifPresent(value -> getUser.plusScale(value, 1));
+            mostFrequentCategory.ifPresent(value -> getUser.plusScale(value, SEARCH.getValue()));
         }
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         return itemRepository.findAllBySortType(sortType, keyword, category, pageRequest);

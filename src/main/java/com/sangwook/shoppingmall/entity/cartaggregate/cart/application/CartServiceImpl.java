@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.sangwook.shoppingmall.constant.Scale.CART;
+import static com.sangwook.shoppingmall.constant.Scale.ORDER;
 import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Transactional
@@ -47,7 +49,7 @@ public class CartServiceImpl implements CartService {
         User user = getUserFetchInterest(userId);
         Item item = getItem(addCart.getItemId());
 
-        user.plusScale(item.getCategory(), 5);
+        user.plusScale(item.getCategory(), CART.getValue());
 
         if (user.equals(item.getUser())) {
             throw new MyItemException("본인의 상품은 카트에 추가할 수 없습니다", getMethodName());
@@ -93,6 +95,7 @@ public class CartServiceImpl implements CartService {
         if (carts.isEmpty()) {
             throw new ObjectNotFoundException("장바구니에 상품이 없습니다", getMethodName());
         }
+        User user = getUserFetchInterest(userId);
         for (Cart cart : carts) {
             //주문 시에도 상품의 수를 재확인, 주문하려는 수량보다 재고가 적게 남은 경우 예외처리
             //구매 성공시 상품의 수량을 줄인다
@@ -101,6 +104,7 @@ public class CartServiceImpl implements CartService {
                 throw new QuantityNotEnoughException("상품의 재고가 충분하지 않습니다");
             }
             item.purchased(cart.getCount());
+            user.plusScale(item.getCategory(), ORDER.getValue());
             History history = History.purchased(cart);
             if (item.getItemCount() <= 3) {
                 publisher.publishEvent(new ItemEvent(item)); //EmailService를 의존하지 않고 Event를 발생시켜 이메일 발송의 트리거가 되도록 함

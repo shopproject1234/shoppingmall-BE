@@ -120,7 +120,9 @@ class UserServiceTest {
         List<Category> categoryList = new ArrayList<>();
         List<Interest> interests = getUser.getInterests();
         for (Interest interest : interests) {
-            categoryList.add(interest.getCategory());
+            if (interest.isInterested()) {
+                categoryList.add(interest.getCategory());
+            }
         }
 
         assertThat(categoryList.size()).isEqualTo(2);
@@ -149,7 +151,10 @@ class UserServiceTest {
         //then
         User getUser = userRepository.findById(user.getId()).get();
 
-        assertThat(getUser.getInterests()).isEmpty();
+        List<Interest> interests = getUser.getInterests();
+        for (Interest interest : interests) {
+            assertThat(interest.isInterested()).isFalse();
+        }
 
     }
 
@@ -172,16 +177,18 @@ class UserServiceTest {
         //then
         User getUser = userRepository.findById(user.getId()).get();
 
-        assertThat(getUser.getInterests()).size().isEqualTo(2);
         List<Category> categoryList = new ArrayList<>();
         List<Interest> interests = getUser.getInterests();
         for (Interest interest : interests) {
-            categoryList.add(interest.getCategory());
+            if (interest.isInterested()) {
+                categoryList.add(interest.getCategory());
+            }
         }
 
         assertThat(categoryList.size()).isEqualTo(2);
         assertThat(categoryList.contains(Category.FURNITURE)).isTrue();
         assertThat(categoryList.contains(Category.KITCHENWARE)).isTrue();
+        assertThat(categoryList.contains(Category.APPLIANCE)).isFalse();
         assertThat(getUser.getName()).isEqualTo("sangwook1");
     }
 

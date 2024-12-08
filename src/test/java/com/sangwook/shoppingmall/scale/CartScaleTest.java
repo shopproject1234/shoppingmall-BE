@@ -74,7 +74,7 @@ public class CartScaleTest {
         item2 = itemService.add(user, addItem5);
     }
 
-    @DisplayName("상품을 장바구니에 추가 시 해당 상품에 맞는 카테고리의 관심도(scale)를 10 증가시킨다")
+    @DisplayName("상품을 장바구니에 추가 시 해당 상품에 맞는 카테고리의 관심도(scale)를 5 증가시킨다")
     @Test
     void test() {
         //given
@@ -95,6 +95,6 @@ public class CartScaleTest {
         List<Interest> interests = getUser.getInterests();
 
         assertThat(interests.get(0).getCategory()).isEqualTo(Category.FURNITURE);
-        assertThat(interests.get(0).getScale()).isEqualTo(10);
+        assertThat(interests.get(0).getScale()).isEqualTo(5);
     }
 }

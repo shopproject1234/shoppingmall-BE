@@ -47,7 +47,7 @@ public class CartServiceImpl implements CartService {
         User user = getUserFetchInterest(userId);
         Item item = getItem(addCart.getItemId());
 
-        user.plusScale(item.getCategory(), 10);
+        user.plusScale(item.getCategory(), 5);
 
         if (user.equals(item.getUser())) {
             throw new MyItemException("본인의 상품은 카트에 추가할 수 없습니다", getMethodName());

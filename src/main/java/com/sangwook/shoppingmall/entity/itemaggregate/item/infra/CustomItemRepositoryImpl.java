@@ -4,6 +4,8 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sangwook.shoppingmall.constant.Category;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
+import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.QItem;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemList;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.QItemList;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.sangwook.shoppingmall.entity.itemaggregate.item.domain.QItemImage.itemImage;
 import static com.sangwook.shoppingmall.entity.itemaggregate.item.domain.QItem.item;
@@ -50,6 +53,23 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
         total = (total != null) ? total : 0L;
 
         return new PageImpl<>(result, pageable, total);
+    }
+
+    @Override
+    public Optional<Category> findMostFrequentCategory(String keyword) {
+        Category mostFrequentCategory = jpaQueryFactory
+                .select(item.category)
+                .from(item)
+                .where(keywordEq(keyword))
+                .groupBy(item.category)
+                .orderBy(item.category.count().desc())
+                .fetchFirst(); // 첫 번째 결과만 가져오기 //TODO 현재 첫번째 결과만 가져오는데, 같은 값이 있을 경우..?
+
+        if (mostFrequentCategory == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(mostFrequentCategory);
     }
 
     private BooleanExpression keywordEq(String keyword) {

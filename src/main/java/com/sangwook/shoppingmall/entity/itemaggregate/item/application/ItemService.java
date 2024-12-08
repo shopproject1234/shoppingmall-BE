@@ -1,11 +1,15 @@
 package com.sangwook.shoppingmall.entity.itemaggregate.item.application;
 
+import com.sangwook.shoppingmall.constant.Category;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.AddItem;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemInfo;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.ItemImage;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemList;
+import com.sangwook.shoppingmall.entity.useraggregate.user.child.interest.infra.InterestRepository;
+import com.sangwook.shoppingmall.entity.useraggregate.user.domain.Interest;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.child.itemImage.infra.ImageRepository;
@@ -32,6 +36,8 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
+    private final InterestRepository interestRepository;
 
     @CacheEvict(value = "itemListCache", allEntries = true)
     public Item add(User user, AddItem addItem) {
@@ -67,7 +73,17 @@ public class ItemService {
 
     @Cacheable(value = "itemListCache", key = "#page", //페이지별 캐싱
             condition = "#sortType == 'latest' && #keyword == null && #category == null")
-    public Page<ItemList> getList(int page, String sortType, String keyword, String category) {
+    public Page<ItemList> getList(int page, String sortType, String keyword, String category, User user) {
+        //키워드 검색 시 가중치에 반영
+        if (keyword != null && user != null) {
+            Long id = user.getId();
+            User getUser = getUserFetchInterest(id);
+            Optional<Category> mostFrequentCategory = itemRepository.findMostFrequentCategory(keyword);
+            if (mostFrequentCategory.isPresent()) {
+                Interest interest = getUser.plusScale(mostFrequentCategory.get(), 1);
+                interestRepository.save(interest);
+            }
+        }
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         return itemRepository.findAllBySortType(sortType, keyword, category, pageRequest);
     }
@@ -84,5 +100,13 @@ public class ItemService {
         if (!item.getUser().equals(user)) {
             throw new UserValidationException(getMethodName());
         }
+    }
+
+    private User getUserFetchInterest(Long userId) {
+        Optional<User> user = userRepository.findUserFetchInterest(userId);
+        if (user.isEmpty()) {
+            throw new ObjectNotFoundException(getMethodName());
+        }
+        return user.get();
     }
 }

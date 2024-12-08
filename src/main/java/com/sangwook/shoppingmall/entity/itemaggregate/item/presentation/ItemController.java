@@ -1,11 +1,14 @@
 package com.sangwook.shoppingmall.entity.itemaggregate.item.presentation;
 
 import com.sangwook.shoppingmall.argumentResolver.Login;
+import com.sangwook.shoppingmall.constant.SessionConst;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.application.ItemService;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.AddItem;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemInfo;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.dto.ItemList;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +46,15 @@ public class ItemController {
     public Page<ItemList> itemList(@RequestParam int page,
                                    @RequestParam String sortType,
                                    @RequestParam(required = false) String keyword,
-                                   @RequestParam(required = false) String category) {
-        return itemService.getList(page, sortType, keyword, category);
+                                   @RequestParam(required = false) String category,
+                                   HttpServletRequest request) {
+        User user;
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            user = null;
+        } else {
+            user = (User) session.getAttribute(SessionConst.LOGIN_USER);
+        }
+        return itemService.getList(page, sortType, keyword, category, user);
     }
 }

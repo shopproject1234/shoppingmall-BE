@@ -144,6 +144,24 @@ public class User {
     }
 
     /**
+     * scale 가중치
+     */
+    public Interest plusScale(Category category, int scale) {
+        Optional<Interest> getInterest = getInterestWithCategory(category);
+        Interest interest;
+        if (getInterest.isPresent()) {
+            interest = getInterest.get();
+            interest.plusScale(scale);
+        } else {
+            interest = new Interest(this, category);
+            interest.plusScale(scale);
+            interests.add(interest);
+        }
+        return interest;
+
+    }
+
+    /**
      * 이 메서드를 작동시키기 위해서는 fetch join 등 N+1 문제 방지가 필요하다.
      * 이 메서드를 사용하는(하나의 특정한 interest를 찾아야 하는) application 코드에서만 fetch join을 진행
      */

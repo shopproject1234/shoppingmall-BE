@@ -208,7 +208,7 @@ public class ItemServiceTest {
         Item add = itemService.add(user, addItem);
 
         //when
-        Page<ItemList> list = itemService.getList(1, "latest", null, null);
+        Page<ItemList> list = itemService.getList(1, "latest", null, null, null);
 
         //then
         List<ItemList> itemList = list.getContent();
@@ -249,7 +249,7 @@ public class ItemServiceTest {
         Item add2 = itemService.add(user, newAddItem);
 
         //when
-        Page<ItemList> list = itemService.getList(1, "latest", null, null);
+        Page<ItemList> list = itemService.getList(1, "latest", null, null, null);
 
         //then
         List<ItemList> itemList = list.getContent();
@@ -306,7 +306,7 @@ public class ItemServiceTest {
 
 
         //when
-        Page<ItemList> list = itemService.getList(1, "reviewCount", null, null);
+        Page<ItemList> list = itemService.getList(1, "reviewCount", null, null, null);
 
         //then
         List<ItemList> itemList = list.getContent();
@@ -375,7 +375,7 @@ public class ItemServiceTest {
 
 
         //when
-        Page<ItemList> list = itemService.getList(1, "reviewAverage", null, null);
+        Page<ItemList> list = itemService.getList(1, "reviewAverage", null, null, null);
 
         //then
         List<ItemList> itemList = list.getContent();

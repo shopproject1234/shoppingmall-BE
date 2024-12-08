@@ -44,8 +44,10 @@ public class CartServiceImpl implements CartService {
     //장바구니 상품 등록
     @Override
     public Cart add(Long userId, AddCart addCart) {
-        User user = getUser(userId);
+        User user = getUserFetchInterest(userId);
         Item item = getItem(addCart.getItemId());
+
+        user.plusScale(item.getCategory(), 10);
 
         if (user.equals(item.getUser())) {
             throw new MyItemException("본인의 상품은 카트에 추가할 수 없습니다", getMethodName());
@@ -112,8 +114,8 @@ public class CartServiceImpl implements CartService {
      *  private Method
      *  다른 Aggregate의 Root Entity만 private Method로 조회하여 사용
      */
-    private User getUser(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
+    private User getUserFetchInterest(Long userId) {
+        Optional<User> user = userRepository.findUserFetchInterest(userId);
         if (user.isEmpty()) {
             throw new ObjectNotFoundException(getMethodName());
         }

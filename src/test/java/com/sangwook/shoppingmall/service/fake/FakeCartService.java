@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.sangwook.shoppingmall.constant.Scale.ORDER;
 import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Transactional
@@ -96,6 +97,7 @@ public class FakeCartService implements CartService {
         if (carts.isEmpty()) {
             throw new ObjectNotFoundException("장바구니에 상품이 없습니다", getMethodName());
         }
+        User user = getUser(userId);
         for (Cart cart : carts) {
             //주문 시에도 상품의 수를 재확인, 주문하려는 수량보다 재고가 적게 남은 경우 예외처리
             //구매 성공시 상품의 수량을 줄인다
@@ -104,6 +106,7 @@ public class FakeCartService implements CartService {
                 throw new IllegalStateException();
             }
             item.purchased(cart.getCount());
+            user.plusScale(item.getCategory(), ORDER.getValue());
             History history = History.purchased(cart);
             if (item.getItemCount() <= 3) {
                 emailService.sendItemMail(item);

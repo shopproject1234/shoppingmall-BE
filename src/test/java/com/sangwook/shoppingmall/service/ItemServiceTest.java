@@ -403,7 +403,7 @@ public class ItemServiceTest {
         Item item = itemService.add(user, addItem);
 
         //when
-        ItemInfo info = itemService.getInfo(item.getId());
+        ItemInfo info = itemService.getInfo(item.getId(), null);
         List<ItemImage> images = imageRepository.findByItemId(item.getId());
 
         //then

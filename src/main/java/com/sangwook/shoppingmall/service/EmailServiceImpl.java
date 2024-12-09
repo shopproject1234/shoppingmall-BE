@@ -3,7 +3,6 @@ package com.sangwook.shoppingmall.service;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.domain.Item;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.User;
 import com.sangwook.shoppingmall.entity.useraggregate.user.domain.dto.EmailCheck;
-import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.exception.custom.EmailSendException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -29,7 +28,6 @@ public class EmailServiceImpl implements EmailService{
 
     private final JavaMailSender javaMailSender;
     private final RedisService redisService;
-    private final UserRepository userRepository;
 
     @Value("${spring.mail.username}")
     private String sender;

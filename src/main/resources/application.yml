@@ -14,7 +14,7 @@ spring:
     include: security
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
   data:
     redis:
       repositories:

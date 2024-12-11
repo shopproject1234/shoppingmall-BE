@@ -7,7 +7,6 @@ import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.entity.itemaggregate.domain.ItemImage;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.ItemList;
 import com.sangwook.shoppingmall.entity.useraggregate.domain.User;
-import com.sangwook.shoppingmall.entity.useraggregate.interest.infra.InterestRepository;
 import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.exception.custom.UserValidationException;
@@ -25,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.sangwook.shoppingmall.constant.Scale.INFO;
-import static com.sangwook.shoppingmall.constant.Scale.SEARCH;
+import static com.sangwook.shoppingmall.common.constant.Scale.INFO;
+import static com.sangwook.shoppingmall.common.constant.Scale.SEARCH;
 import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Service

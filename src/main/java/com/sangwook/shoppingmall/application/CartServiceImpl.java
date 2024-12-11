@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.sangwook.shoppingmall.constant.Scale.CART;
-import static com.sangwook.shoppingmall.constant.Scale.ORDER;
+import static com.sangwook.shoppingmall.common.constant.Scale.CART;
+import static com.sangwook.shoppingmall.common.constant.Scale.ORDER;
 import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Transactional

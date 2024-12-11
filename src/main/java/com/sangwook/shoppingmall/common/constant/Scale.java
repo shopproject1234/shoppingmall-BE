@@ -1,4 +1,4 @@
-package com.sangwook.shoppingmall.constant;
+package com.sangwook.shoppingmall.common.constant;
 
 import lombok.Getter;
 

@@ -2,6 +2,7 @@ package com.sangwook.shoppingmall.presentation;
 
 import com.sangwook.shoppingmall.common.argumentResolver.Login;
 import com.sangwook.shoppingmall.application.ItemService;
+import com.sangwook.shoppingmall.common.argumentResolver.UserForScale;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.AddItem;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.ItemList;
@@ -35,15 +36,17 @@ public class ItemController {
     }
 
     @GetMapping("/item/{item_id}/info")
-    public ItemInfo itemInfo(@PathVariable("item_id") Long itemId) {
-        return itemService.getInfo(itemId);
+    public ItemInfo itemInfo(@PathVariable("item_id") Long itemId, @UserForScale User user) {
+        return itemService.getInfo(itemId, user);
     }
 
     @GetMapping("/item/list")
     public Page<ItemList> itemList(@RequestParam int page,
                                    @RequestParam String sortType,
                                    @RequestParam(required = false) String keyword,
-                                   @RequestParam(required = false) String category) {
-        return itemService.getList(page, sortType, keyword, category);
+                                   @RequestParam(required = false) String category,
+                                   @UserForScale User user) {
+
+        return itemService.getList(page, sortType, keyword, category, user);
     }
 }

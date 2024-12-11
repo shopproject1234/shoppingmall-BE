@@ -1,11 +1,14 @@
 package com.sangwook.shoppingmall.application;
 
+import com.sangwook.shoppingmall.common.constant.Category;
 import com.sangwook.shoppingmall.entity.itemaggregate.domain.Item;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.AddItem;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.ItemInfo;
 import com.sangwook.shoppingmall.entity.itemaggregate.domain.ItemImage;
 import com.sangwook.shoppingmall.entity.itemaggregate.item.dto.ItemList;
 import com.sangwook.shoppingmall.entity.useraggregate.domain.User;
+import com.sangwook.shoppingmall.entity.useraggregate.interest.infra.InterestRepository;
+import com.sangwook.shoppingmall.entity.useraggregate.user.infra.UserRepository;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
 import com.sangwook.shoppingmall.exception.custom.UserValidationException;
 import com.sangwook.shoppingmall.entity.itemaggregate.itemImage.infra.ImageRepository;
@@ -22,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.sangwook.shoppingmall.constant.Scale.INFO;
+import static com.sangwook.shoppingmall.constant.Scale.SEARCH;
 import static com.sangwook.shoppingmall.exception.MethodFunction.getMethodName;
 
 @Service
@@ -32,6 +37,7 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
 
     @CacheEvict(value = "itemListCache", allEntries = true)
     public Item add(User user, AddItem addItem) {
@@ -59,15 +65,25 @@ public class ItemService {
     /**
      * 조회만을 위해 repository에서 직접 하는 것은 DDD의 개념에 위배되지 않음
      */
-    public ItemInfo getInfo(Long itemId) {
+    public ItemInfo getInfo(Long itemId, User user) {
         Item item = getItem(itemId);
+        if (user != null) {
+            User getUser = getUserFetchInterest(user.getId());
+            getUser.plusScale(item.getCategory(), INFO.getValue());
+        }
         List<ItemImage> image = imageRepository.findByItemId(itemId);
         return new ItemInfo(item, image);
     }
 
     @Cacheable(value = "itemListCache", key = "#page", //페이지별 캐싱
             condition = "#sortType == 'latest' && #keyword == null && #category == null")
-    public Page<ItemList> getList(int page, String sortType, String keyword, String category) {
+    public Page<ItemList> getList(int page, String sortType, String keyword, String category, User user) {
+        //키워드 검색 시 가중치에 반영
+        if (keyword != null && user != null) {
+            User getUser = getUserFetchInterest(user.getId());
+            Optional<Category> mostFrequentCategory = itemRepository.findMostFrequentCategory(keyword);
+            mostFrequentCategory.ifPresent(value -> getUser.plusScale(value, SEARCH.getValue()));
+        }
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
         return itemRepository.findAllBySortType(sortType, keyword, category, pageRequest);
     }
@@ -84,5 +100,13 @@ public class ItemService {
         if (!item.getUser().equals(user)) {
             throw new UserValidationException(getMethodName());
         }
+    }
+
+    private User getUserFetchInterest(Long userId) {
+        Optional<User> user = userRepository.findUserFetchInterest(userId);
+        if (user.isEmpty()) {
+            throw new ObjectNotFoundException(getMethodName());
+        }
+        return user.get();
     }
 }

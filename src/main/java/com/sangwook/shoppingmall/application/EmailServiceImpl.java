@@ -29,7 +29,6 @@ public class EmailServiceImpl implements EmailService{
 
     private final JavaMailSender javaMailSender;
     private final RedisService redisService;
-    private final UserRepository userRepository;
 
     @Value("${spring.mail.username}")
     private String sender;

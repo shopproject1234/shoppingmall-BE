@@ -2,6 +2,7 @@ package com.sangwook.shoppingmall.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sangwook.shoppingmall.common.argumentResolver.LoginArgumentResolver;
+import com.sangwook.shoppingmall.common.argumentResolver.ScaleArgumentResolver;
 import com.sangwook.shoppingmall.common.interceptor.LoginInterceptor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginArgumentResolver());
+        resolvers.addAll(List.of(new LoginArgumentResolver(), new ScaleArgumentResolver()));
     }
 
     @Override

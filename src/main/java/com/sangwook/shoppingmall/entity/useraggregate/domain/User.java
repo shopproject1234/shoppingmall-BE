@@ -2,7 +2,6 @@ package com.sangwook.shoppingmall.entity.useraggregate.domain;
 
 import com.sangwook.shoppingmall.common.constant.Category;
 import com.sangwook.shoppingmall.common.constant.Gender;
-import com.sangwook.shoppingmall.common.constant.Preference;
 import com.sangwook.shoppingmall.entity.useraggregate.user.dto.UserInfo;
 import com.sangwook.shoppingmall.entity.useraggregate.user.dto.UserRegister;
 import com.sangwook.shoppingmall.exception.custom.ObjectNotFoundException;
@@ -77,7 +76,7 @@ public class User {
         if (getInterest.isEmpty()) {
             interested(category);
         } else { //이미 해당 카테고리의 관심사가 있는 경우 Preference를 INTERESTED로 변경
-            changeScale(category, Preference.INTERESTED);
+            getInterest.get().setInterested(true);
         }
     }
 
@@ -87,8 +86,8 @@ public class User {
             throw new ObjectNotFoundException(getMethodName());
         }
         Interest get = interest.get();
-        if (get.getScale().equals(Preference.INTERESTED)) {
-            interests.remove(get);
+        if (get.isInterested()) {
+            get.setInterested(false);
         }
     }
 
@@ -128,7 +127,11 @@ public class User {
     }
 
     private void deleteAllInterests() {
-        interests.removeIf(interest -> interest.getScale().equals(Preference.INTERESTED));
+        for (Interest interest : interests) {
+            if (interest.isInterested()) {
+                interest.setInterested(false);
+            }
+        }
     }
 
     private Category categoryConverter(String category) {
@@ -136,13 +139,26 @@ public class User {
     }
 
     private void interested(Category category) {
-        Interest interest = new Interest(this, category, Preference.INTERESTED);
+        Interest interest = new Interest(this, category, true);
         interests.add(interest);
     }
 
-    public void changeScale(Category category, Preference scale) {
-        Optional<Interest> interest = getInterestWithCategory(category);
-        interest.ifPresent(value -> value.changeScale(scale));
+    /**
+     * scale 가중치
+     */
+    public Interest plusScale(Category category, int scale) {
+        Optional<Interest> getInterest = getInterestWithCategory(category);
+        Interest interest;
+        if (getInterest.isPresent()) {
+            interest = getInterest.get();
+            interest.plusScale(scale);
+        } else {
+            interest = new Interest(this, category);
+            interest.plusScale(scale);
+            interests.add(interest);
+        }
+        return interest;
+
     }
 
     /**

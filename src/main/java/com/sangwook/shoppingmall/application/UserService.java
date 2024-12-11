@@ -1,7 +1,6 @@
 package com.sangwook.shoppingmall.application;
 
 import com.sangwook.shoppingmall.common.constant.Category;
-import com.sangwook.shoppingmall.common.constant.Preference;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.dto.MyPurchase;
 import com.sangwook.shoppingmall.entity.historyaggregate.history.infra.HistoryRepository;
 import com.sangwook.shoppingmall.entity.itemaggregate.review.dto.MyReview;
@@ -64,7 +63,7 @@ public class UserService {
         info.setNickname(user.getName());
 
         for (Interest interest : interests) {
-            if (interest.getScale().equals(Preference.INTERESTED)) {
+            if (interest.isInterested()) {
                 interested.add(interest.getCategory());
             }
         }

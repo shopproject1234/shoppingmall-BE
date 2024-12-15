@@ -75,7 +75,7 @@ public class ItemService {
     }
 
     @Cacheable(value = "itemListCache", key = "#page", //페이지별 캐싱
-            condition = "#sortType == 'latest' && #keyword == null && #category == null")
+            condition = "#page <= 50 && #sortType == 'latest' && #keyword == null && #category == null")
     public Page<ItemList> getList(int page, String sortType, String keyword, String category, User user) {
         //키워드 검색 시 가중치에 반영
         if (keyword != null && user != null) {
